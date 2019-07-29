@@ -82,7 +82,17 @@ public struct Episode: Media, Equatable {
             self.episode = try map.value("number")
         } else {
             self.episode = ((try? map.value("episode")) ?? Int((map.JSON["episode"] as? String)!)!)
-            self.id = ((try? map.value("tvdb_id", using: StringTransform()).replacingOccurrences(of: "-", with: "")) ?? (map.JSON["tvdb_id"] as! String).replacingOccurrences(of: "-", with: ""))
+
+            // Handle JSON 'null' values.
+            do {
+                self.id = try map.value("tvdb_id", using: StringTransform()).replacingOccurrences(of: "-", with: "")
+
+            } catch {
+                print("nil error?")
+                self.id = (map.JSON["tvdb_id"] as? String)?.replacingOccurrences(of: "-", with: "") ?? ""
+
+            }
+
             if let torrents = map["torrents"].currentValue as? [String: [String: Any]] {
                 for (quality, torrent) in torrents {
                     if var torrent = Mapper<Torrent>().map(JSONObject: torrent) , quality != "0" {

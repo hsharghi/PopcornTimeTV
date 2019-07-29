@@ -152,3 +152,5 @@ fastlane/screenshots
 *.xcscmblueprint
 
 .DS_Store
+/Podfile.lock
+/PopcornTime/Supporting Files/tvOS.plist
