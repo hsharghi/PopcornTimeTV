@@ -7,7 +7,7 @@ protocol SubtitlesViewControllerDelegate: class {
     func didSelectSubtitle(_ subtitle: Subtitle?)
 }
 
-class SubtitlesViewController: OptionsStackViewController,SubtitlesViewControllerDelegate, UITableViewDataSource {
+class SubtitlesViewController: OptionsStackViewController, SubtitlesViewControllerDelegate, UITableViewDataSource {
     
     var subtitles = Dictionary<String, [Subtitle]>()
     let encodings = SubtitleSettings.encodings
@@ -73,7 +73,7 @@ class SubtitlesViewController: OptionsStackViewController,SubtitlesViewControlle
             label.font = UIFont.systemFont(ofSize: 35.0, weight: UIFont.Weight.medium)
             label.center = tableView.center
             label.sizeToFit()
-        }else if tableView == firstTableView && subtitlesInView.isEmpty{
+        } else if tableView == firstTableView && subtitlesInView.isEmpty {
             subtitlesInView = [currentSubtitle ?? subtitles[Locale.current.localizedString(forLanguageCode: "en")!.localizedCapitalized]?.first ?? subtitles[subtitles.keys.first!]!.first!,Subtitle(name: "", language: "Select Other".localized, link: "", ISO639: "", rating: 0.0)]//insert predetermined subtitle or english or first available whichever exists
             for unknownSubtitle in SubtitleSettings.shared.subtitlesSelectedForVideo{
                 if let subtitle = unknownSubtitle as? Subtitle{
@@ -104,9 +104,10 @@ class SubtitlesViewController: OptionsStackViewController,SubtitlesViewControlle
         case firstTableView:
             let cell = firstTableView.cellForRow(at: indexPath)
             if indexPath.row != (tableView.numberOfRows(inSection: 0) - 1) {
-                if currentSubtitle?.language == cell?.textLabel?.text && currentSubtitle == subtitles[cell?.textLabel?.text ?? ""]?.first{ // If row was already selected, user wants to remove the selection.
+                if currentSubtitle?.language == cell?.textLabel?.text &&
+                    currentSubtitle == subtitles[cell?.textLabel?.text ?? ""]?.first { // If row was already selected, user wants to remove the selection.
                     currentSubtitle = nil
-                }else if currentSubtitle?.language != cell?.textLabel?.text {
+                } else if currentSubtitle?.language != cell?.textLabel?.text {
                     currentSubtitle = (subtitlesInView.compactMap{ return $0.language == cell?.textLabel?.text ? $0 : nil }).first
                 }
                 delegate?.didSelectSubtitle(currentSubtitle)

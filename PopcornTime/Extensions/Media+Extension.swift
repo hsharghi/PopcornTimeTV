@@ -51,7 +51,9 @@ extension Media {
         PTTorrentStreamer.shared().cancelStreamingAndDeleteData(false) // Make sure we're not already streaming
         
         if url.hasPrefix("magnet") || (url.hasSuffix(".torrent") && !url.hasPrefix("http")) {
+
             loadingViewController.streamer = .shared()
+
             if selectingTorrentBlock != nil {
                 PTTorrentStreamer.shared().startStreaming(fromMultiTorrentFileOrMagnetLink: url, progress: { (status) in
                     loadingBlock(status, loadingViewController)
@@ -63,7 +65,7 @@ extension Media {
                 }, selectFileToStream: { torrents in
                     return selectingTorrentBlock!(torrents)
                 })
-            }else{
+            } else {
                 PTTorrentStreamer.shared().startStreaming(fromFileOrMagnetLink: url, progress: { (status) in
                     loadingBlock(status, loadingViewController)
                 }, readyToPlay: { (videoFileURL, videoFilePath) in
