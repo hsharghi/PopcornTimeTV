@@ -52,18 +52,28 @@ class ContinueWatchingCollectionReusableView: UICollectionReusableView, UICollec
             }
             
             if self.type == .movies {
-                WatchedlistManager<Movie>.movie.getOnDeck().forEach { (id) in
+                let movie = WatchedlistManager<Movie>.movie
+                let currentlyWatchingMedia = movie.getOnDeck()
+
+                currentlyWatchingMedia.forEach { (id) in
                     group.enter()
                     PopcornKit.getMovieInfo(id) { (movie, error) in
-                        if let movie = movie { media.append(movie) }
+                        if let movie = movie, !movie.torrents.isEmpty {
+                            media.append(movie)
+                        }
                         group.leave()
                     }
                 }
             } else if self.type == .episodes {
-                WatchedlistManager<Episode>.episode.getOnDeck().forEach { (id) in
+                let episode = WatchedlistManager<Episode>.episode
+                let currentlyWatchingMedia = episode.getOnDeck()
+
+                currentlyWatchingMedia.forEach { (id) in
                     group.enter()
                     PopcornKit.getEpisodeInfo(Int(id)!) { (episode, error) in
-                        if let episode = episode { media.append(episode) }
+                        if let episode = episode, !episode.torrents.isEmpty {
+                            media.append(episode)
+                        }
                         group.leave()
                     }
                 }

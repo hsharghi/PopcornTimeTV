@@ -14,6 +14,7 @@ class ShowDetailViewController: DetailViewController {
     }
     
     override func loadMedia(id: String, completion: @escaping (Media?, NSError?) -> Void) {
+
         PopcornKit.getShowInfo(id) { (show, error) in
             
             if let error = error {
@@ -34,20 +35,22 @@ class ShowDetailViewController: DetailViewController {
             group.enter()
             TraktManager.shared.getRelated(show) {arg1,_ in
                 show.related = arg1
-                
+
                 group.leave()
             }
+
             group.enter()
             TraktManager.shared.getPeople(forMediaOfType: .shows, id: show.id) {arg1,arg2,_ in
                 show.actors = arg1
                 show.crew = arg2
-                
+
                 group.leave()
             }
-            
+
             group.enter()
             self.loadEpisodeMetadata(for: show) { episodes in
                 show.episodes = episodes
+
                 group.leave()
             }
             
@@ -55,6 +58,7 @@ class ShowDetailViewController: DetailViewController {
                 completion(show, nil)
             }
         }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

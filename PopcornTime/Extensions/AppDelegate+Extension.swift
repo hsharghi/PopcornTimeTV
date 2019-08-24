@@ -11,7 +11,7 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
         if let quality = UserDefaults.standard.string(forKey: "autoSelectQuality") {
             let sorted  = media.torrents.sorted(by: <)
             let torrent = quality == "Highest".localized ? sorted.last! : sorted.first!
-            
+
             return completion(torrent)
         }
         

@@ -72,19 +72,20 @@ class MainViewController: UIViewController, CollectionViewControllerDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
         if segue.identifier == "embed", let vc = segue.destination as? CollectionViewController {
             collectionViewController = vc
             collectionViewController.delegate = self
             #if os(iOS)
                 collectionViewController.isRefreshable = true
             #endif
+
         } else if let segue = segue as? AutoPlayStoryboardSegue,
             segue.identifier == "showMovie" || segue.identifier == "showShow",
             let media: Media = sender as? Movie ?? sender as? Show,
             let vc = storyboard?.instantiateViewController(withIdentifier: String(describing: DetailViewController.self)) as? DetailViewController {
-            
-            #if os(tvOS)
 
+            #if os(tvOS)
                 if let destination = segue.destination as? TVLoadingViewController {
                     destination.loadView() // Initialize the @IBOutlets
                     
@@ -94,7 +95,7 @@ class MainViewController: UIViewController, CollectionViewControllerDelegate {
                     
                     destination.titleLabel.text = media.title
                 }
-            
+
             #endif
             
             // Exact same storyboard UI is being used for both classes. This will enable subclass-specific functions however, stored instance variables have to be set using `object_setIvar` otherwise there will be weird malloc crashes.
@@ -108,14 +109,13 @@ class MainViewController: UIViewController, CollectionViewControllerDelegate {
                 guard let navigationController = segue.destination.navigationController,
                     navigationController.visibleViewController === segue.destination // Make sure we're still loading and the user hasn't dismissed the view.
                     else { return }
-                
-                
+
                 let transition = CATransition()
                 transition.duration = 0.5
                 transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
                 transition.type = CATransitionType.fade
                 navigationController.view.layer.add(transition, forKey: nil)
-                
+
                 defer {
                     DispatchQueue.main.asyncAfter(deadline: .now() + transition.duration) {
                         var viewControllers = navigationController.viewControllers
@@ -123,10 +123,11 @@ class MainViewController: UIViewController, CollectionViewControllerDelegate {
                             viewControllers.remove(at: index)
                             navigationController.setViewControllers(viewControllers, animated: false)
                         }
-                        
-                        if let media = (media as? Show)?.latestUnwatchedEpisode() ?? media, segue.shouldAutoPlay {
-                            AppDelegate.shared.chooseQuality(nil, media: media) { torrent in
-                                AppDelegate.shared.play(media, torrent: torrent)
+
+                        let mediaShow = (media as? Show)?.latestUnwatchedEpisode()
+                        if let newMedia = mediaShow ?? media, segue.shouldAutoPlay, !newMedia.torrents.isEmpty {
+                            AppDelegate.shared.chooseQuality(nil, media: newMedia) { torrent in
+                                AppDelegate.shared.play(newMedia, torrent: torrent)
                             }
                         }
                     }
@@ -140,11 +141,13 @@ class MainViewController: UIViewController, CollectionViewControllerDelegate {
                     vc.view = view
                     
                     navigationController.pushViewController(vc, animated: false)
+
                 } else if let currentItem = media {
                     vc.currentItem = currentItem
                     navigationController.pushViewController(vc, animated: false)
                 }
             }
+
         } else if segue.identifier == "showPerson",
             let vc = segue.destination as? PersonViewController,
             let person: Person = sender as? Crew ?? sender as? Actor {
