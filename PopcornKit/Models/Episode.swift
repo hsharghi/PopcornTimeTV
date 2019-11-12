@@ -88,7 +88,7 @@ public struct Episode: Media, Equatable {
                 self.id = try map.value("tvdb_id", using: StringTransform()).replacingOccurrences(of: "-", with: "")
 
             } catch {
-                print("nil error?")
+//                print("nil error?")
                 self.id = (map.JSON["tvdb_id"] as? String)?.replacingOccurrences(of: "-", with: "") ?? ""
 
             }

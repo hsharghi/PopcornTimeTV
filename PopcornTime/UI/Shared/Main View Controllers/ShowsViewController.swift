@@ -1,8 +1,10 @@
 
 
 import UIKit
-import class PopcornKit.ShowManager
 import func PopcornKit.loadShows
+import class PopcornKit.ShowManager
+import class PopcornKit.NetworkManager
+
 
 class ShowsViewController: MediaViewController {
     @IBOutlet weak var magnetLinkTextField: UISearchBar!
@@ -65,11 +67,22 @@ class ShowsViewController: MediaViewController {
             self.collectionViewController.isLoading = false
             
             guard let shows = shows else { self.collectionViewController.error = error; self.collectionView?.reloadData(); return }
-            
-            self.collectionViewController.dataSources[0] += shows as [AnyHashable]
+
+            let genreFilterdShows = shows.filter {
+                // no horror movies please
+                if $0.genres.contains(where: {
+                    $0.range(of: NetworkManager.Genres.horror.rawValue.lowercased(), options: [.caseInsensitive, .anchored]) != nil
+                }) { // true
+                    return false
+                }
+
+                return true
+            }
+
+            self.collectionViewController.dataSources[0] += genreFilterdShows as [AnyHashable]
             self.collectionViewController.dataSources[0].unique()
             
-            if shows.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
+            if genreFilterdShows.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
             {
                 self.collectionView?.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
             } else {

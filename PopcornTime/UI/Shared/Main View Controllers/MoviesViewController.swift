@@ -3,6 +3,8 @@
 import UIKit
 import func PopcornKit.loadMovies
 import class PopcornKit.MovieManager
+import class PopcornKit.NetworkManager
+
 
 class MoviesViewController: MediaViewController {
     @IBOutlet weak var magnetLinkTextField: UISearchBar!
@@ -11,7 +13,7 @@ class MoviesViewController: MediaViewController {
         return UINib(nibName: String(describing: ContinueWatchingCollectionReusableView.self), bundle: nil)
     }
     
-    var currentFilter: MovieManager.Filters = .trending {
+    var currentFilter = MovieManager.Filters.trending {
         didSet {
             collectionViewController.currentPage = 1
             didRefresh(collectionView: collectionView!)
@@ -66,11 +68,22 @@ class MoviesViewController: MediaViewController {
             self.collectionViewController.isLoading = false
             
             guard let movies = movies else { self.collectionViewController.error = error; self.collectionView?.reloadData(); return }
-            
-            self.collectionViewController.dataSources[0] += movies as [AnyHashable]
+
+            let genreFilterdMovies = movies.filter {
+                // no horror movies please
+                if $0.genres.contains(where: {
+                    $0.range(of: NetworkManager.Genres.horror.rawValue.lowercased(), options: [.caseInsensitive, .anchored]) != nil
+                }) { // true
+                    return false
+                }
+
+                return true
+            }
+
+            self.collectionViewController.dataSources[0] += genreFilterdMovies as [AnyHashable]
             self.collectionViewController.dataSources[0].unique()
             
-            if movies.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
+            if genreFilterdMovies.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
             {
                 self.collectionView?.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
             } else {
