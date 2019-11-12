@@ -36,12 +36,14 @@ class LoadExternalTorrentViewController:UIViewController,GCDWebServerDelegate,PC
                     //Movie completion Blocks
                     
                     let error: (String) -> Void = { (errorMessage) in
+                      DispatchQueue.main.async {
                         if self.presentedViewController != nil {
                             self.dismiss(animated: false)
                         }
                         let vc = UIAlertController(title: "Error".localized, message: errorMessage, preferredStyle: .alert)
                         vc.addAction(UIAlertAction(title: "OK".localized, style: .cancel, handler: nil))
                         self.present(vc, animated: true)
+                      }
                     }
                     
                     let finishedLoading: (PreloadTorrentViewController, UIViewController) -> Void = { (loadingVc, playerVc) in
