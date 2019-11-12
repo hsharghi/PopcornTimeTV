@@ -68,7 +68,7 @@ class ShowsViewController: MediaViewController {
             
             guard let shows = shows else { self.collectionViewController.error = error; self.collectionView?.reloadData(); return }
 
-            let genreFilterdShows = shows.filter {
+            let genreFilteredShows = shows.filter {
                 // no horror movies please
                 if $0.genres.contains(where: {
                     $0.range(of: NetworkManager.Genres.horror.rawValue.lowercased(), options: [.caseInsensitive, .anchored]) != nil
@@ -79,10 +79,10 @@ class ShowsViewController: MediaViewController {
                 return true
             }
 
-            self.collectionViewController.dataSources[0] += genreFilterdShows as [AnyHashable]
+            self.collectionViewController.dataSources[0] += genreFilteredShows as [AnyHashable]
             self.collectionViewController.dataSources[0].unique()
             
-            if genreFilterdShows.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
+            if genreFilteredShows.isEmpty // If the array passed in is empty, there are no more results so the content inset of the collection view is reset.
             {
                 self.collectionView?.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
             } else {
