@@ -35,6 +35,17 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
             
             var mediaItems = [TVContentItem]()
             for item in media[0..<10] {
+
+                if isMovie {
+                    let movieItem = item as! Movie
+
+                    if movieItem.genres.contains(where: {
+                        $0.range(of: NetworkManager.Genres.horror.rawValue.lowercased(), options: [.caseInsensitive, .anchored]) != nil
+                    }) { // true
+                        continue    // skip it
+                    }
+                }
+
                 mediaItems.append(
                     self.buildShelfItem(
                         item.title,
