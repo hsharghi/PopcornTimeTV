@@ -39,8 +39,7 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
         alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
         alertController.popoverPresentationController?.sourceView = sender
-
-        present(alertController, animated: true, completion: nil)
+        self.activeRootViewController?.present(alertController, animated: true, completion: nil)
     }
 
     func play(_ media: Media, torrent: Torrent) {
@@ -90,7 +89,7 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
         }
         loadingViewController.titleLabel.text = media.title
 
-        present(loadingViewController, animated: true)
+        self.activeRootViewController?.present(loadingViewController, animated: true)
 
         let error: (String) -> Void = { (errorMessage) in
             let alertController = UIAlertController(title: "Error".localized, message: errorMessage, preferredStyle: .alert)
@@ -105,8 +104,8 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
             // Enable here, so playerVc behavior is unchanged.
             UIApplication.shared.isIdleTimerDisabled = false
             let flag = UIDevice.current.userInterfaceIdiom != .tv
-            self.dismiss(animated: flag) {
-                self.present(playerVc, animated: flag)
+            loadingVc.dismiss(animated: false) {
+                self.activeRootViewController?.present(playerVc, animated: true)
             }
         }
 
@@ -163,9 +162,8 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
                 didDeleteHandler?()
             })
             alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-
             alertController.popoverPresentationController?.sourceView = button
-            present(alertController, animated: true, completion: nil)
+            self.activeRootViewController?.present(alertController, animated: true, completion: nil)
         case .downloading:
             download.pause()
             button.downloadState = .paused
