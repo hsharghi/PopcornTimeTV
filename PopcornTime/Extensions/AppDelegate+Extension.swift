@@ -88,6 +88,7 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
             loadingViewController.backgroundImageView?.af_setImage(withURL: url)
         }
         loadingViewController.titleLabel.text = media.title
+        loadingViewController.modalPresentationStyle = .fullScreen
 
         self.activeRootViewController?.present(loadingViewController, animated: true)
 
