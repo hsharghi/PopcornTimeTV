@@ -145,6 +145,7 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
 
             let playViewController = storyboard.instantiateViewController(withIdentifier: "PCTPlayerViewController") as! PCTPlayerViewController
             playViewController.delegate = self
+            playViewController.modalPresentationStyle = .fullScreen
             media.play(fromFileOrMagnetLink: torrent.url, nextEpisodeInSeries: nextEpisode, loadingViewController: loadingViewController, playViewController: playViewController, progress: currentProgress, errorBlock: error, finishedLoadingBlock: finishedLoading, selectingTorrentBlock: media.title == "Unknown" ? selectTorrent : nil)
         }
     }
