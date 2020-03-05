@@ -43,6 +43,11 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
     }
 
     func play(_ media: Media, torrent: Torrent) {
+
+        // Clear cache upon playing any media.
+        // As sometimes existing cache gets corrupt and causes player to crash when trying to resume.
+        clearCache()
+
         if UIDevice.current.hasCellularCapabilites && !reachability.isReachableViaWiFi() && !UserDefaults.standard.bool(forKey: "streamOnCellular") {
 
             let alertController = UIAlertController(title: "Cellular Data is turned off for streaming".localized, message: nil, preferredStyle: .alert)
@@ -138,7 +143,12 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
 
             if GCKCastContext.sharedInstance().castState == .connected {
                 let playViewController = storyboard.instantiateViewController(withIdentifier: "CastPlayerViewController") as! CastPlayerViewController
-                media.playOnChromecast(fromFileOrMagnetLink: torrent.url, loadingViewController: loadingViewController, playViewController: playViewController, progress: currentProgress, errorBlock: error, finishedLoadingBlock: finishedLoading)
+                media.playOnChromecast(fromFileOrMagnetLink: torrent.url,
+                                       loadingViewController: loadingViewController,
+                                       playViewController: playViewController,
+                                       progress: currentProgress,
+                                       errorBlock: error,
+                                       finishedLoadingBlock: finishedLoading)
                 return
             }
             #endif
@@ -146,7 +156,14 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
             let playViewController = storyboard.instantiateViewController(withIdentifier: "PCTPlayerViewController") as! PCTPlayerViewController
             playViewController.delegate = self
             playViewController.modalPresentationStyle = .fullScreen
-            media.play(fromFileOrMagnetLink: torrent.url, nextEpisodeInSeries: nextEpisode, loadingViewController: loadingViewController, playViewController: playViewController, progress: currentProgress, errorBlock: error, finishedLoadingBlock: finishedLoading, selectingTorrentBlock: media.title == "Unknown" ? selectTorrent : nil)
+            media.play(fromFileOrMagnetLink: torrent.url,
+                       nextEpisodeInSeries: nextEpisode,
+                       loadingViewController: loadingViewController,
+                       playViewController: playViewController,
+                       progress: currentProgress,
+                       errorBlock: error,
+                       finishedLoadingBlock: finishedLoading,
+                       selectingTorrentBlock: media.title == "Unknown" ? selectTorrent : nil)
         }
     }
 
@@ -256,4 +273,27 @@ extension AppDelegate: PCTPlayerViewControllerDelegate, UIViewControllerTransiti
         }
         return nil
     }
+
+    func clearCache() {
+        print("clearCache:")
+
+        do {
+            let size = FileManager.default.folderSize(atPath: NSTemporaryDirectory())
+            for path in try FileManager.default.contentsOfDirectory(atPath: NSTemporaryDirectory()) {
+                try FileManager.default.removeItem(atPath: NSTemporaryDirectory() + "/\(path)")
+            }
+
+            print("Success")
+
+            if size == 0 {
+                print("Cache was already empty, no disk space was reclaimed.")
+            } else {
+                print("Cleaned".localized + " \(ByteCountFormatter.string(fromByteCount: size, countStyle: .file)).")
+            }
+        } catch {
+            print("Failed".localized)
+            print("Error cleaning cache.".localized)
+        }
+    }
+
 }
