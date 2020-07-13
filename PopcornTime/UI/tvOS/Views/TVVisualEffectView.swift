@@ -44,9 +44,14 @@ import UIKit
         let style = UIBlurEffect.Style(rawValue: raw)!
 
         let effect = UICustomBlurEffect.init(style: style)
-        effect.setValue(1.0, forKey: "scale")
-        effect.setValue(radius, forKey: "blurRadius")
-        effect.setValue(UIColor.clear, forKey: "colorTint")
+
+        if #available(tvOS 14, *) {
+            // find another way
+         } else {
+            effect.setValue(1.0, forKey: "scale")
+            effect.setValue(radius, forKey: "blurRadius")
+            effect.setValue(UIColor.clear, forKey: "colorTint")
+        }
         
         self.blurEffect = effect
     }
