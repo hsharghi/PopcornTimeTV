@@ -103,7 +103,7 @@ public struct Fanart {
 
 public struct OpenSubtitles {
     static let base = "https://rest.opensubtitles.org/"
-    static let userAgent = "Popcorn Time v1"
+    static let userAgent = "Popcorn Time NodeJS"
     
 //    static let logIn = "LogIn"
 //    static let logOut = "LogOut"
