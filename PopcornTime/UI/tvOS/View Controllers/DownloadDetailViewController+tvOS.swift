@@ -152,6 +152,8 @@ extension DownloadDetailViewController: UITableViewDataSource, UITableViewDelega
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+
+        tableView.selectRow(at: nextIndexPath, animated: false, scrollPosition: .none)
     }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {

@@ -8,7 +8,12 @@ import UIKit
         get {
             return blurEffect.value(forKey: "blurRadius") as? CGFloat ?? 90
         } set (radius) {
-            blurEffect.setValue(radius, forKey: "blurRadius")
+            if #available(tvOS 14, *) {
+                // find another way
+            } else {
+                blurEffect.setValue(radius, forKey: "blurRadius")
+            }
+
             effect = blurEffect
         }
     }
