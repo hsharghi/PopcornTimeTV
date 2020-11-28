@@ -22,5 +22,7 @@
 	<string>17</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Needed for Airplay &amp;amp; Chromecast</string>
 </dict>
 </plist>

@@ -11,7 +11,7 @@ class MoviesViewController: MediaViewController {
         return UINib(nibName: String(describing: ContinueWatchingCollectionReusableView.self), bundle: nil)
     }
     
-    var currentFilter: MovieManager.Filters = .trending {
+    var currentFilter: MovieManager.Filters = .popularity {
         didSet {
             collectionViewController.currentPage = 1
             didRefresh(collectionView: collectionView!)

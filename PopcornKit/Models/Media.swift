@@ -80,6 +80,28 @@ class IntTransform: TransformType {
     }
 }
 
+class DoubleTransform: TransformType {
+    typealias Object = Double
+    typealias JSON = String
+    
+    init() {}
+    
+    func transformFromJSON(_ value: Any?) -> Object? {
+        if let json = value as? JSON {
+            return Object(json)
+        }
+        
+        return nil
+    }
+    
+    func transformToJSON(_ value: Object?) -> JSON? {
+        if let object = value {
+            return JSON(object)
+        }
+        return nil
+    }
+}
+
 class StringTransform: TransformType {
     typealias Object = String
     typealias JSON = Int

@@ -16,7 +16,7 @@ def pods
 end
 
 target 'PopcornTimeiOS' do
-    platform :ios, '9.0'
+    platform :ios, '11.0'
     pods
     pod 'AlamofireNetworkActivityIndicator', '~> 2.4.0'
     pod 'google-cast-sdk', '~> 4.4'
@@ -26,7 +26,7 @@ target 'PopcornTimeiOS' do
 end
 
 target 'PopcornTimetvOS' do
-    platform :tvos, '10.2'
+    platform :tvos, '11.0'
     pods
     pod 'TvOSMoreButton', '~> 1.2.0'
     pod 'TVVLCKit', '~> 3.3.0'
@@ -34,7 +34,7 @@ target 'PopcornTimetvOS' do
 end
 
 target 'TopShelf' do
-    platform :tvos, '10.2'
+    platform :tvos, '11.0'
     pod 'ObjectMapper', '~> 3.5.0'
 end
 
@@ -46,17 +46,20 @@ def kitPods
 end
 
 target 'PopcornKit tvOS' do
-    platform :tvos, '10.2'
+    platform :tvos, '11.0'
     kitPods
 end
 
 target 'PopcornKit iOS' do
-    platform :ios, '9.0'
+    platform :ios, '11.0'
     kitPods
     pod 'google-cast-sdk', '~> 4.4'
 end
 
 post_install do |installer|
+    installer.pods_project.build_configurations.each do |config|
+         config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
             config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""

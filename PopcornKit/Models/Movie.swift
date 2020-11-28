@@ -42,7 +42,7 @@ public struct Movie: Media, Equatable {
     
     /// The youtube code (part of the url after `?v=`) of the trailer. Will be `nil` if trailer url is `nil`.
     public var trailerCode: String? {
-        if let trailer = trailer { return trailer.slice(from: "?v=", to: "") }
+        if let trailer = trailer { return  trailer.contains("?v=") ? trailer.slice(from: "?v=", to: "") : trailer }
         return nil
     }
     
@@ -105,7 +105,8 @@ public struct Movie: Media, Equatable {
     /// All the actors in the movie. Empty by default. Must be filled by calling `getPeople:forMediaOfType:id:completion` on `TraktManager`.
     public var actors = [Actor]()
     
-    /// The related movies. Empty by default. Must be filled by calling `getRelated:media:completion` on `TraktManager`.
+    /// The related movies. Empty by default. Must d3fc@n01
+    /// be filled by calling `getRelated:media:completion` on `TraktManager`.
     public var related = [Movie]()
     
     /// The torrents for the movie. Will be empty by default if the movies were loaded from Trakt. Can be filled by calling `getInfo:imdbId:completion` on `MovieManager`.
@@ -122,7 +123,7 @@ public struct Movie: Media, Equatable {
         catch { return nil }
     }
 
-    private init(_ map: Map) throws {
+   /* private init(_ map: Map) throws {
         if map.context is TraktContext {
             self.id = try map.value("ids.imdb")
             self.year = try map.value("year", using: StringTransform())
@@ -153,6 +154,58 @@ public struct Movie: Media, Equatable {
                     self.torrents.append(torrent)
                 }
             }
+        }
+        torrents.sort(by: <)
+    }*/
+    private init(_ map: Map) throws {
+        if map.context is TraktContext {
+            self.id = try map.value("ids.imdb")
+            self.year = try map.value("year", using: StringTransform())
+            self.rating = try map.value("rating")
+            self.summary = ((try? map.value("overview")) ?? "No summary available.".localized).removingHtmlEncoding
+            self.runtime = try map.value("runtime")
+            let title: String? = (try map.value("title") as String).removingHtmlEncoding
+            self.title = title ?? ""
+            self.tmdbId = try? map.value("ids.tmdb")
+            self.slug = title?.slugged ?? ""
+            self.trailer = try? map.value("trailer"); trailer == "false" ? trailer = nil : ()
+            self.certification = try map.value("certification")
+            self.genres = (try? map.value("genres")) ?? [String]()
+            if let torrents = map["torrents.en"].currentValue as? [String: [String: Any]] {
+                for (quality, torrent) in torrents {
+                    if var torrent = Mapper<Torrent>().map(JSONObject: torrent) , quality != "0" {
+                        torrent.quality = quality
+                        self.torrents.append(torrent)
+                    }
+                }
+            }
+        } else {
+            self.id = try map.value("imdb")
+            self.year = try map.value("year", using: StringTransform())
+            self.rating = try map.value("rating")
+            self.summary = ((try? map.value("description")) ?? "No summary available.".localized).removingHtmlEncoding
+            self.largeCoverImage = try? map.value("poster_med"); self.largeCoverImage = self.largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000")
+            self.largeBackgroundImage = try? map.value("poster_big"); self.largeBackgroundImage = self.largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920")
+            self.runtime = try map.value("runtime")
+
+            let title: String? = (try map.value("title") as String).removingHtmlEncoding
+            self.title = title ?? ""
+            //self.tmdbId = try? map.value("ids.tmdb")
+            self.slug = title?.slugged ?? ""
+            self.trailer = try? map.value("trailer"); trailer == "false" ? trailer = nil : ()
+            self.certification = ""//try map.value("certification")
+            self.genres = (try? map.value("genres")) ?? [String]()
+            if let torrents = map["items"].currentValue as? [[String:Any]] {
+                for (torrent) in torrents {
+                    let torrentobj = Torrent( url: torrent["torrent_magnet"] as! String,
+                                              quality: torrent["quality"] as! String,
+                                              seeds:torrent["torrent_seeds"] as! Int,
+                                              peers: torrent["torrent_peers"] as! Int)
+
+                    self.torrents.append(torrentobj)
+                }
+            }
+            
         }
         torrents.sort(by: <)
     }
