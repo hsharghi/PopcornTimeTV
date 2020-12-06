@@ -10,7 +10,7 @@ public struct Subtitle: Equatable,Mappable {
     
     /// Language string of the subtitle. Eg. English.
     public let language: String
-    static let defaultLang = "Unknown"
+    static let defaultLang = "English"
     
     /// Subtitles Name
     public let name: String
@@ -41,6 +41,9 @@ public struct Subtitle: Equatable,Mappable {
         self.rating = try (map.value("SubRating") as NSString).doubleValue
         let subLanguage = (Locale.current.localizedString(forLanguageCode: ISOname)?.localizedCapitalized ??
             Locale.current.localizedString(forLanguageCode: ISOname.replacingOccurrences(of: "pob", with: "pt_BR")) ?? Locale.current.localizedString(forLanguageCode: ISOname.replacingOccurrences(of: "pb", with: "pt_BR")))
+
+        self.language = subLanguage ?? Subtitle.defaultLang
+/*
         if (try map.value("SubLanguageID") != "pob")
         {
             self.language = subLanguage ?? Subtitle.defaultLang
@@ -50,6 +53,7 @@ public struct Subtitle: Equatable,Mappable {
             self.language = " Português (BR)"
             
         }
+*/
     }
     
     public mutating func mapping(map: Map) {

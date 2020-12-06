@@ -2035,7 +2035,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PopcornTimeiOS/Pods-PopcornTimeiOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/1PasswordExtension/OnePasswordExtension.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS9.0/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage-iOS/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityIndicator/AlamofireNetworkActivityIndicator.framework",
 				"${BUILT_PRODUCTS_DIR}/FloatRatingView-iOS/FloatRatingView.framework",
@@ -2043,7 +2043,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel-iOS/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/OBSlider/OBSlider.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS9.0/ObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS/ObjectMapper.framework",
 				"${PODS_ROOT}/PopcornTorrent/Build/iOS/PopcornTorrent.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability-iOS/Reachability.framework",
@@ -2084,12 +2084,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PopcornTimetvOS/Pods-PopcornTimetvOS-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-tvOS11.0/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-tvOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage-tvOS/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/FloatRatingView-tvOS/FloatRatingView.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer-tvOS/GCDWebServer.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel-tvOS/MarqueeLabel.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper-tvOS11.0/ObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper-tvOS/ObjectMapper.framework",
 				"${PODS_ROOT}/PopcornTorrent/Build/tvOS/PopcornTorrent.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability-tvOS/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyTimer-tvOS/SwiftyTimer.framework",
@@ -2967,14 +2967,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 36.SD;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				EXPANDED_CODE_SIGN_IDENTITY = "-";
 				EXPANDED_CODE_SIGN_IDENTITY_NAME = "-";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(SRCROOT)/PopcornTime/Supporting Files/tvOS.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime81.tvos;
+				MARKETING_VERSION = 3.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime.tvos;
 				PRODUCT_NAME = PopcornTime;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
@@ -2996,14 +2998,16 @@
 				CODE_SIGN_ENTITLEMENTS = "PopcornTime/Supporting Files/PopcornTime.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 36.SD;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				EXPANDED_CODE_SIGN_IDENTITY = "-";
 				EXPANDED_CODE_SIGN_IDENTITY_NAME = "-";
 				INFOPLIST_FILE = "$(SRCROOT)/PopcornTime/Supporting Files/tvOS.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 3.2;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime81.tvos;
+				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime.tvos;
 				PRODUCT_NAME = PopcornTime;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ENFORCE_EXCLUSIVE_ACCESS = "compile-time";
@@ -3027,9 +3031,9 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 18;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -3065,9 +3069,9 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 18;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -3173,7 +3177,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				EXPANDED_CODE_SIGN_IDENTITY = "-";
 				EXPANDED_CODE_SIGN_IDENTITY_NAME = "-";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3183,7 +3187,7 @@
 				);
 				INFOPLIST_FILE = TopShelf/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime81.tvos.TopShelf;
+				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime.tvos.TopShelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3207,14 +3211,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9ZG5XWBLSB;
+				DEVELOPMENT_TEAM = "";
 				EXPANDED_CODE_SIGN_IDENTITY = "-";
 				EXPANDED_CODE_SIGN_IDENTITY_NAME = "-";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TopShelf/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime81.tvos.TopShelf;
+				PRODUCT_BUNDLE_IDENTIFIER = com.popcorntimetv.popcorntime.tvos.TopShelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;

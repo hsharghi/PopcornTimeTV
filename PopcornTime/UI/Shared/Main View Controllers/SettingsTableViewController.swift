@@ -172,7 +172,7 @@ class SettingsTableViewController: UITableViewController, TraktManagerDelegate {
                 }
                 
                 alertController.addAction(UIAlertAction(title: "None".localized, style: .default, handler: handler))
-                alertController.addAction(UIAlertAction(title: " Português (BR)", style: .default, handler: handler))
+//                alertController.addAction(UIAlertAction(title: " Português (BR)", style: .default, handler: handler))
                 
                 
                 alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
