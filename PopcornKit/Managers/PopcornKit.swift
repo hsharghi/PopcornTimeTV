@@ -74,6 +74,7 @@ public func loadMovies(
     searchTerm: String? = nil,
     orderBy order: MovieManager.Orders = .descending,
     completion: @escaping ([Movie]?, NSError?) -> Void) {
+    //MovieManager.shared.load(
     MovieManager.shared.load(
         page,
         filterBy: filter,

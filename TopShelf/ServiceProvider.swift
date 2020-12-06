@@ -63,7 +63,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
             items.insert(item, at: isMovie ? 0 : 1)
         }
         group.enter()
-        PopcornKit.loadMovies(filterBy: .trending) { (movies, error) in
+        PopcornKit.loadMovies(filterBy: .popularity) { (movies, error) in
             completion(movies, error)
         }
         group.enter()
@@ -81,7 +81,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
     
     func buildShelfItem(_ title: String, image: String?, action: String) -> TVContentItem {
         let item = TVContentItem(contentIdentifier: TVContentIdentifier(identifier: title, container: nil))
-        if let image = image { item.imageURL = URL(string: image) }
+        if let image = image { item.setImageURL(URL(string: image), forTraits: TVContentItemImageTrait.init()) }
         item.imageShape = .poster
         var components = URLComponents()
         components.scheme = "PopcornTime"

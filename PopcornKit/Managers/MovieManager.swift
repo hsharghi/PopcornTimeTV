@@ -9,10 +9,9 @@ open class MovieManager: NetworkManager {
     
     /// Possible filters used in API call.
     public enum Filters: String {
-        case trending = "trending"
-        case popularity = "seeds"
+        case trending, popularity = "seeds"
         case rating = "rating"
-        case date = "last added"
+        case date = "dateadded"
         case year = "year"
         
         public static let array = [trending, popularity, rating, date, year]
@@ -44,7 +43,7 @@ open class MovieManager: NetworkManager {
      
      - Parameter completion: Completion handler for the request. Returns array of movies upon success, error upon failure.
      */
-    open func load(
+    open func load_ori(
         _ page: Int,
         filterBy filter: Filters,
         genre: Genres,
@@ -63,6 +62,46 @@ open class MovieManager: NetworkManager {
             completion(Mapper<Movie>().mapArray(JSONObject: value), nil)
         }
     }
+
+    /**
+     Load Movies from API.
+     
+     - Parameter page:       The page number to load.
+     - Parameter filterBy:   Sort the response by Popularity, Year, Date Rating, Alphabet or Trending.
+     - Parameter genre:      Only return movies that match the provided genre.
+     - Parameter searchTerm: Only return movies that match the provided string.
+     - Parameter orderBy:    Ascending or descending.
+     
+     - Parameter completion: Completion handler for the request. Returns array of movies upon success, error upon failure.
+     */
+    open func load(
+        _ page: Int,
+        filterBy filter: Filters,
+        genre: Genres,
+        searchTerm: String?,
+        orderBy order: Orders,
+        completion: @escaping ([Movie]?, NSError?) -> Void) {
+        
+        var params: [String: Any] = ["sort": filter.rawValue,
+                                     "short":0,
+                                     "cb": "",
+                                     "page":page,
+                                     "nc":1,
+                                     "quality":"720p,1080p,3d",
+                                     "order": order.rawValue,
+                                     "genre": genre.rawValue.replacingOccurrences(of: " ", with: "-").lowercased()]
+        if let searchTerm = searchTerm , !searchTerm.isEmpty {
+            params["keywords"] = searchTerm
+        }
+        self.manager.request(PopcornMovies.base + PopcornMovies.movies, parameters: params).validate().responseJSON { response in
+            guard let value = response.result.value else {
+                completion(nil, response.result.error as NSError?)
+                return
+            }
+            completion(Mapper<Movie>().mapArray(JSONObject: (value as? NSDictionary)?["MovieList"]), nil)
+        }
+    }
+    
     
     /**
      Get more movie information.
@@ -72,7 +111,7 @@ open class MovieManager: NetworkManager {
      - Parameter completion:    Completion handler for the request. Returns movie upon success, error upon failure.
      */
     open func getInfo(_ imdbId: String, completion: @escaping (Movie?, NSError?) -> Void) {
-        self.manager.request(PopcornMovies.base + PopcornMovies.movie + "/\(imdbId)").validate().responseJSON { response in
+        self.manager.request(PopcornMovies.base + PopcornMovies.movie + "?cb=&quality=720p,1080p,3d&imdb=" + imdbId).validate().responseJSON { response in
             guard let value = response.result.value else {completion(nil, response.result.error as NSError?); return}
             DispatchQueue.global(qos: .background).async {
                 let mappedItem = Mapper<Movie>().map(JSONObject: value)
