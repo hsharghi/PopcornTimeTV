@@ -102,7 +102,7 @@ public struct Episode: Media, Equatable {
         let episode = self.episode // Stop compiler complaining about passing uninitialised variables to closure.
         self.title = ((try? map.value("title")) ?? "Episode \(episode)").removingHtmlEncoding
         self.slug = title.slugged
-        self.largeBackgroundImage = try? map.value("images.fanart")
+        self.largeBackgroundImage = try? map.value("images.fanart"); self.largeBackgroundImage = self.largeBackgroundImage?.replacingOccurrences(of: "http://", with: "https://")
     }
     
     public init(title: String = NSLocalizedString("Unknown", comment: ""), id: String = "0000000", tmdbId: Int? = nil, slug: String = "unknown", summary: String = "No summary available.".localized, torrents: [Torrent] = [], subtitles: Dictionary<String, [Subtitle]> = [:], largeBackgroundImage: String? = nil, largeCoverImage: String? = nil, show: Show? = nil, episode: Int = -1, season: Int = -1) {
