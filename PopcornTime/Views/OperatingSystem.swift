@@ -7,88 +7,84 @@
 //
 
 import SwiftUI
+//#if canImport(UIKit)
+//import UIKit
+//var lastOrientation: UIDeviceOrientation = .unknown
+//#endif
 
-//https://stackoverflow.com/questions/61386877/in-swiftui-is-it-possible-to-use-a-modifier-only-for-a-certain-os-target/62099616#62099616
-enum OperatingSystem {
-    case macOS
-    case iOS
-    case tvOS
-    case watchOS
-
-    #if os(macOS)
-    static let current = macOS
-    #elseif os(iOS)
-    static let current = iOS
-    #elseif os(tvOS)
-    static let current = tvOS
-    #elseif os(watchOS)
-    static let current = watchOS
-    #else
-    #error("Unsupported platform")
-    #endif
-}
-
-func value<T>(tvOS: T, macOS: T) -> T {
+func value<T>(tvOS: T, macOS: T, compactSize: T? = nil) -> T {
     #if os(tvOS)
         return tvOS
     #elseif os(macOS)
         return macOS
     #elseif os(iOS)
+    
+    if UIDevice.current.userInterfaceIdiom == .phone, let compactSize = compactSize {
+        let isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+        return isPortrait ? compactSize : macOS
+//        var orientation = UIDevice.current.orientation
+//        orientation = (orientation.isPortrait || orientation.isLandscape) ? orientation : lastOrientation
+//        if orientation.isPortrait {
+//            lastOrientation = orientation
+//            return compactSize
+//        } else if orientation.isLandscape {
+//            lastOrientation = orientation
+//            return macOS
+//        }
+//        return compactSize
+    } else {
         return macOS
+    }
     #endif
 }
 
-extension View {
-    /**
-    Conditionally apply modifiers depending on the target operating system.
-
-    ```
-    struct ContentView: View {
-        var body: some View {
-            Text("Unicorn")
-                .font(.system(size: 10))
-                .ifOS(.macOS, .tvOS) {
-                    $0.font(.system(size: 20))
-                }
-        }
-    }
-    ```
-    */
-    @ViewBuilder
-    func ifOS<Content: View>(
-        _ operatingSystems: OperatingSystem...,
-        modifier: (Self) -> Content
-    ) -> some View {
-        if operatingSystems.contains(OperatingSystem.current) {
-            modifier(self)
+struct CompactSizeClassModifier: ViewModifier {
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) var sizeClass
+    #endif
+    
+    func body(content: Content) -> some View {
+        #if os(iOS)
+        
+//        let isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+//        if isPortrait {
+        if sizeClass == .compact {
+            
         } else {
-            self
+            content
         }
+        #else
+        content
+        #endif
     }
 }
 
 extension View {
-    /**
-    Modify the view in a closure. This can be useful when you need to conditionally apply a modifier that is unavailable on certain platforms.
-
-    For example, imagine this code needing to run on macOS too where `View#actionSheet()` is not available:
-
-    ```
-    struct ContentView: View {
-        var body: some View {
-            Text("Unicorn")
-                .modify {
-                    #if os(iOS)
-                    $0.actionSheet(…)
-                    #else
-                    $0
-                    #endif
-                }
+    
+    @ViewBuilder
+    func hideIfCompactSize() -> some View {
+        #if os(iOS)
+        let isPortrait = UIScreen.main.bounds.width < UIScreen.main.bounds.height
+        if UIDevice.current.userInterfaceIdiom == .phone, isPortrait {
+            
+        } else {
+            self
         }
+        #else
+        self
+        #endif
     }
-    ```
-    */
-    func modify<T: View>(@ViewBuilder modifier: (Self) -> T) -> T {
-        modifier(self)
+    
+    @ViewBuilder
+    func hideIfPhone() -> some View {
+        #if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            
+        } else {
+            self
+        }
+        #else
+        self
+        #endif
     }
 }

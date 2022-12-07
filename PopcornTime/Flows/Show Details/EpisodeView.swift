@@ -42,7 +42,7 @@ struct EpisodeView: View {
             }
             .overlay(alignment: .bottomTrailing) {
                 if episode.isWatched {
-                    Image("Episode Watched Indicator - small")
+                    Image("Episode Watched Indicator")
                 }
             }
             .cornerRadius(10)

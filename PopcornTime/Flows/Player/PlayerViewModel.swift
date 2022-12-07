@@ -111,6 +111,12 @@ class PlayerViewModel: NSObject, ObservableObject {
         }
     }
     
+    deinit {
+        if let observer = torrentStatusChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     func playOnAppear() {
         guard mediaplayer.state == .stopped || mediaplayer.state == .opening else { return }
         
@@ -248,6 +254,11 @@ class PlayerViewModel: NSObject, ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             self.resetIdleTimer()
         }
+        #if os(macOS)
+        if showControls == false {
+            NSCursor.setHiddenUntilMouseMoves(true)
+        }
+        #endif
     }
 
     func endScrubbing() {
@@ -287,8 +298,12 @@ class PlayerViewModel: NSObject, ObservableObject {
     
     func resetIdleTimer() {
         idleWorkItem?.cancel()
-        idleWorkItem = DispatchWorkItem() { [unowned self] in
-            if showControls && self.mediaplayer.isPlaying && !self.progress.isScrubbing && !self.progress.isBuffering && self.mediaplayer.rate == 1.0
+        idleWorkItem = DispatchWorkItem() { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            if self.showControls && self.mediaplayer.isPlaying && !self.progress.isScrubbing && !self.progress.isBuffering && self.mediaplayer.rate == 1.0
                 //&& self.movieView.isDescendant(of: self.view) // If paused, scrubbing, fast forwarding, loading or mirroring, cancel work Item so UI doesn't disappear
             {
                 self.toggleControlsVisible()
@@ -298,7 +313,7 @@ class PlayerViewModel: NSObject, ObservableObject {
         #if os(tvOS)
         let delay: TimeInterval = 3
         #else
-        let delay: TimeInterval = 5
+        let delay: TimeInterval = 10
         #endif
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: idleWorkItem!)
     }
@@ -370,7 +385,7 @@ extension PlayerViewModel: VLCMediaPlayerDelegate {
         progress.progress = mediaplayer.position
         
         let remaining = mediaplayer.remainingTime.flatMap({ Int($0.intValue / 1000) })
-        if let remaining = remaining, remaining >= -ShowUpNextDuration {
+        if let remaining = remaining, mediaplayer.position > 0.9, remaining >= -ShowUpNextDuration {
             if progress.showUpNext == false && progress.showUpNextProgress == 0 {
                 progress.showUpNext = true
                 progress.showUpNextProgress = 1.0
@@ -392,7 +407,10 @@ extension PlayerViewModel: VLCMediaPlayerDelegate {
         case .ended:
             fallthrough
         case .stopped:
-            didFinishPlaying()
+            let mediaEndedOnStart = mediaplayer.position == 0 // workaround
+            if !mediaEndedOnStart {
+                didFinishPlaying()
+            }
         case .paused:
             saveMediaProgress(status: .paused)
             isPlaying = false

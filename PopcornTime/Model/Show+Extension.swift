@@ -39,7 +39,7 @@ extension Show {
                 return first
             }
             
-            return nil
+            return latest // remain to latest watched episode, no need to change sesions when checking if new content is available
         }
         
         return latest

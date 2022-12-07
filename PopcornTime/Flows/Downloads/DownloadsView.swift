@@ -77,7 +77,7 @@ struct DownloadsView: View {
                         DownloadView(viewModel: DownloadViewModel(download: download))
                             .frame(width: theme.downloadingSize.width, height: theme.downloadingSize.height)
                     }
-                    .padding(30) // allow zoom
+                    .padding(theme.downloadingPadding) // allow zoom
                 }
                 .padding(.all, 0)
             }
@@ -126,11 +126,12 @@ struct DownloadsView: View {
 
 extension DownloadsView {
     struct Theme {
-        let itemWidth: CGFloat = value(tvOS: 240, macOS: 200)
-        let itemHeight: CGFloat = value(tvOS: 420, macOS: 350)
-        let downloadingSize: CGSize = value(tvOS: CGSize(width: 500, height: 400) , macOS: CGSize(width: 300, height: 200))
-        let itemSpacing: CGFloat = value(tvOS: 40, macOS: 30)
-        let leading: CGFloat = value(tvOS: 50, macOS: 50)
+        let itemWidth: CGFloat = value(tvOS: 240, macOS: 200, compactSize: 160)
+        let itemHeight: CGFloat = value(tvOS: 420, macOS: 350, compactSize: 300)
+        let downloadingSize: CGSize = value(tvOS: CGSize(width: 500, height: 400) , macOS: CGSize(width: 300, height: 220))
+        let downloadingPadding: CGFloat = value(tvOS: 30, macOS: 20)
+        let itemSpacing: CGFloat = value(tvOS: 40, macOS: 25, compactSize: 10)
+        let leading: CGFloat = value(tvOS: 50, macOS: 50, compactSize: 10)
     }
 }
 
@@ -150,7 +151,8 @@ struct DownloadsView_Previews: PreviewProvider {
             .onAppear {
                 viewModel.downloading = [
                     .dummy(status: .downloading),
-                    .dummyEpisode(status: .downloading)
+                    .dummyEpisode(status: .downloading),
+                    .dummy(status: .failed),
                 ]
             }
     }
@@ -159,8 +161,8 @@ struct DownloadsView_Previews: PreviewProvider {
         let viewModel = DownloadsViewModel()
         return DownloadsView(viewModel: viewModel)
             .onAppear {
-                viewModel.completedMovies = [.dummy(status: .finished)]
-                viewModel.completedEpisodes = [.dummyEpisode(status: .finished)]
+                viewModel.completedMovies = [.dummy(status: .finished), .dummy(status: .finished)]
+                viewModel.completedEpisodes = [.dummyEpisode(status: .finished), .dummyEpisode(status: .finished)]
             }
     }
 }

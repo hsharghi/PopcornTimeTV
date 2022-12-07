@@ -14,15 +14,14 @@ struct ShowDetailsView: View, MediaPosterLoader {
     let theme = Theme()
     
     @StateObject var viewModel: ShowDetailsViewModel
-    @State var showSeasonPicker: Bool = false
-    
     var show: Show {
         return viewModel.show
     }
     
-    @Namespace var section1
-    @Namespace var section2
-    @Namespace var section3
+    @Namespace var sectionInfo
+    @Namespace var sectionEpisodes
+    @Namespace var sectionWatched
+    @Namespace var sectionCast
     @Environment(\.openURL) var openURL
     
     var body: some View {
@@ -35,11 +34,17 @@ struct ShowDetailsView: View, MediaPosterLoader {
                             HStack {
                                 Text(show.title)
                                     .font(theme.titleFont)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .minimumScaleFactor(0.01)
+                                    .multilineTextAlignment(.center)
+                                    .lineLimit(2)
                                     .padding(.bottom, 50)
                                     .padding(.top, 200)
-                                    .multilineTextAlignment(.center)
+
                                 Spacer()
+                                    .hideIfPhone()
                             }
+                            .frame(maxWidth: .infinity)
                             
                             VStack(alignment: .leading, spacing: 50) {
                                 
@@ -53,17 +58,29 @@ struct ShowDetailsView: View, MediaPosterLoader {
                                         }
                                     })
                                     .frame(maxWidth: theme.summaryMaxWidth)
+                                #if os(iOS)
+                                if UIDevice.current.userInterfaceIdiom == .phone {
+                                    ScrollView(.horizontal) {
+                                        actionButtons(scroll: scroll)
+                                            .padding(.bottom, 20)
+                                    }
+                                } else {
+                                    actionButtons(scroll: scroll)
+                                        .padding(.bottom, 20)
+                                }
+                                #else
                                 actionButtons(scroll: scroll)
                                     .padding(.bottom, 20)
+                                #endif
                             }
                         }
-                        .id(section1)
+                        .id(sectionInfo)
                         #if os(tvOS)
                         .frame(idealHeight: 1010)
                         .padding([.leading, .trailing], 100)
                         #else
                         .frame(idealHeight: 780)
-                        .padding([.leading, .trailing], 50)
+                        .padding([.leading, .trailing], theme.watchedSection.leading)
                         #endif
                     }
                     #if os(tvOS)
@@ -75,7 +92,7 @@ struct ShowDetailsView: View, MediaPosterLoader {
                             EpisodesView(show: viewModel.show, episodes: viewModel.seasonEpisodes(), currentSeason: viewModel.currentSeason, currentEpisode: viewModel.latestUnwatchedEpisode, onFocus: {
                                 #if os(tvOS)
                                 withAnimation() {
-                                    scroll.scrollTo(section2, anchor: .top)
+                                    scroll.scrollTo(sectionEpisodes, anchor: .top)
                                 }
                                 #endif
                             })
@@ -88,40 +105,37 @@ struct ShowDetailsView: View, MediaPosterLoader {
                             alsoWatchedSection(scroll: scroll)
                                 #if os(tvOS)
                                 .focusSection()
+                                .id(sectionWatched)
                                 #endif
                         }
                         if viewModel.persons.count > 0 {
                             ActorsCrewView(persons: $viewModel.persons)
+                            .id(sectionCast)
                             #if os(tvOS)
                             .focusSection()
                             #endif
                         }
                     }
+                    #if os(tvOS)
                     .padding([.bottom, .top], 30)
+                    #endif
                     .background( show.episodes.isEmpty ? .clear : Color.init(white: 0, opacity: 0.3))
-//                    .padding(.top, 50)
-                    .id(section2)
+                    .id(sectionEpisodes)
                 }
             }
-            if let error = viewModel.error {
+            if let error = viewModel.error ?? viewModel.trailerModel.error {
                 BannerView(error: error)
-                    .padding([.top, .trailing], 60)
+                    .padding([.trailing], theme.bannerTrailing)
+                    .padding([.top], theme.bannertop)
                     .transition(.move(edge: .top))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            viewModel.error = nil
+                            viewModel.trailerModel.error = nil
                         }
                     }
             }
         }.onAppear {
-            if !showSeasonPicker {
-                viewModel.playSongTheme()
-                viewModel.load()
-            }
-        }.onDisappear {
-            if !showSeasonPicker {
-                viewModel.stopTheme()
-            }
+            viewModel.load()
         }
         .environmentObject(viewModel)
         .ignoresSafeArea()
@@ -149,7 +163,7 @@ struct ShowDetailsView: View, MediaPosterLoader {
         let year = show.year
         
         let items = [genre, year].compactMap({$0}).map{Text($0)}
-            + (["HD", "CC"]).map { Text(Image($0).renderingMode(.template)) }
+        let certifications = (["HD", "CC"]).map { Text(Image($0).renderingMode(.template)) }
         
         let watchOn: String = .localizedStringWithFormat("Watch %@ on %@".localized, show.title, show.network ?? "TV")
         let runtime = "Run Time".localized + " \(show.runtime ?? 0) min"
@@ -161,6 +175,11 @@ struct ShowDetailsView: View, MediaPosterLoader {
                 ForEach(0..<items.count, id: \.self) { item in
                     items[item]
                 }
+                ForEach(0..<certifications.count, id: \.self) { item in
+                    certifications[item]
+                }
+                .hideIfCompactSize()
+                
                 StarRatingView(rating: show.rating / 20)
                     .frame(width: theme.starSize.width, height: theme.starSize.height)
                     .padding(.top, theme.starOffset)
@@ -178,6 +197,8 @@ struct ShowDetailsView: View, MediaPosterLoader {
     func actionButtons(scroll: ScrollViewProxy?) -> some View {
         HStack(spacing: 24) {
             if viewModel.didLoad {
+                TrailerButton(viewModel: viewModel.trailerModel)
+                
                 if let episode = viewModel.nextEpisodeToWatch() {
                     PlayButton(media: episode)
                 }
@@ -190,39 +211,30 @@ struct ShowDetailsView: View, MediaPosterLoader {
                 ProgressView()
                     .padding(.leading, 50)
                     .padding(.bottom, 40)
+                    .hideIfCompactSize()
             }
         }
         .buttonStyle(TVButtonStyle(onFocus: {
             #if os(tvOS)
             withAnimation {
-                scroll?.scrollTo(section1, anchor: .top)
+                scroll?.scrollTo(sectionInfo, anchor: .top)
             }
             #endif
         }))
     }
     
     var seasonsButton: some View {
-        ZStack {
-            NavigationLink(
-                destination: SeasonPickerView(viewModel: SeasonPickerViewModel(show: show), selectedSeasonNumber: $viewModel.currentSeason),
-                isActive: $showSeasonPicker,
-                label: {
-                    EmptyView()
-                })
-                .hidden()
-            
-            Button(action: {
-                showSeasonPicker = true
-            }, label: {
-                VStack {
-                    VisualEffectBlur() {
-                        Image("Seasons")
-                    }
-                    Text("Series")
+        NavigationLink(destination: {
+            SeasonPickerView(viewModel: .init(show: show), selectedSeasonNumber: $viewModel.currentSeason)
+        }) {
+            VStack {
+                VisualEffectBlur() {
+                    Image("Seasons")
                 }
-            })
-            .frame(width: theme.buttonWidth, height: theme.buttonHeight)
+                Text("Series")
+            }
         }
+        .frame(width: theme.buttonWidth, height: theme.buttonHeight)
     }
     
     var watchlistButton: some View {
@@ -256,9 +268,16 @@ struct ShowDetailsView: View, MediaPosterLoader {
                                     .frame(width: theme.watchedSection.cellWidth)
                             })
                             .buttonStyle(PlainNavigationLinkButtonStyle(onFocus: {
-//                                withAnimation {
-//                                    scroll.scrollTo(section3, anchor: .top)
-//                                }
+                                #if os(tvOS)
+                                if show == viewModel.related.first {
+                                    // workaround for stupid apple focus sections that is causing a crash
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        withAnimation {
+                                            scroll.scrollTo(sectionCast)
+                                        }
+                                    }
+                                }
+                                #endif
                             }))
                             .task {
                                 await loadPosterIfMissing(media: show, mediaPosters: $viewModel.related)
@@ -273,7 +292,6 @@ struct ShowDetailsView: View, MediaPosterLoader {
         }
         .frame(height: theme.watchedSection.height)
         .padding(0)
-        .id(section3)
         .background(
             Color(white: 0, opacity: 0.3)
                 .padding([.bottom], -10)
@@ -299,16 +317,18 @@ extension ShowDetailsView {
         
         let starSize: CGSize = value(tvOS: CGSize(width: 220, height: 40), macOS: CGSize(width: 110, height: 20))
         let starOffset: CGFloat = value(tvOS: -8, macOS: -4)
-        let watchedSection: (height: CGFloat, cellWidth: CGFloat, cellHeight: CGFloat, spacing: CGFloat, leading: CGFloat)
-            = (height: value(tvOS: 475, macOS: 280),
+        var watchedSection: (height: CGFloat, cellWidth: CGFloat, cellHeight: CGFloat, spacing: CGFloat, leading: CGFloat)
+        { (height: value(tvOS: 475, macOS: 280),
                cellWidth: value(tvOS: 220, macOS: 150),
                cellHeight: value(tvOS: 460, macOS: 180),
                spacing: value(tvOS: 80, macOS: 30),
-               leading: value(tvOS: 90, macOS: 50))
+            leading: value(tvOS: 90, macOS: 50, compactSize: 20)) }
         let backgroundOpacity = value(tvOS: 0.3, macOS: 0.5)
         let seasonFontSize: CGFloat = value(tvOS: 43, macOS: 21)
         let titleFont: Font = Font.system(size: value(tvOS: 76, macOS: 50), weight: .medium)
         let summaryMaxWidth: CGFloat = value(tvOS: 1200, macOS: 800)
+        let bannerTrailing: CGFloat = value(tvOS: 60, macOS: 60, compactSize: 20)
+        let bannertop: CGFloat = value(tvOS: 60, macOS: 60, compactSize: 100)
     }
 }
 

@@ -87,4 +87,38 @@ open class TMDBApi {
         }
         return image ?? ""
     }
+    
+    /**
+     Load trailer video from TMDB.
+     
+     - Parameter tmdbId:          The tmdb id of the show.
+     - Parameter season:            The season number of the episode.
+     */
+    open func getTrailerVideo(tmdbId: Int, season: Int) async throws -> String? {
+        let path = TMDB.tv + "/\(tmdbId)" + TMDB.season + "/\(season)" + TMDB.videos
+        let data = try await client.request(.get, path: path, parameters: TMDB.defaultHeaders).responseData()
+        let responseDict = JSON(data)
+        print(responseDict.rawValue)
+        
+        var trailerId: String?
+        if let item = responseDict["results"].array?.first(where: { item in
+            return item["site"].string == "YouTube" && item["type"].string == "Trailer"
+        }) {
+            trailerId = item["key"].string
+        }
+        
+        if trailerId == nil, let item = responseDict["results"].array?.first(where: { item in
+            return item["site"].string == "YouTube" && item["type"].string == "Teaser"      
+        }) {
+            trailerId = item["key"].string
+        }
+        
+        if trailerId == nil, let item = responseDict["results"].array?.first(where: { item in
+            return item["site"].string == "YouTube"
+        }) {
+            trailerId = item["key"].string
+        }
+        
+        return trailerId
+    }
 } 

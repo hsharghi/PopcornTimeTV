@@ -9,10 +9,12 @@
 import Foundation
 import PopcornKit
 import AVKit
+import SwiftUI
+import Combine
 
 class MovieDetailsViewModel: ObservableObject, CharacterHeadshotLoader, MediaRatingsLoader, MediaPosterLoader {
     @Published var movie: Movie
-    var error: Error?
+    @Published var error: Error?
     
     @Published var isLoading = false
     @Published var didLoad = false
@@ -21,11 +23,15 @@ class MovieDetailsViewModel: ObservableObject, CharacterHeadshotLoader, MediaRat
     
     var trailerModel: TrailerButtonViewModel
     var downloadModel: DownloadButtonViewModel
+    var trailerErrorObserver: AnyCancellable?
     
     init(movie: Movie) {
         self.movie = movie
         self.trailerModel = TrailerButtonViewModel(movie: movie)
         self.downloadModel = DownloadButtonViewModel(media: movie)
+        self.trailerErrorObserver = trailerModel.$error.sink(receiveValue: { [unowned self] error in
+            self.objectWillChange.send()
+        })
     }
     
     func load() {

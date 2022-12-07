@@ -60,13 +60,33 @@ class DownloadButtonViewModel: NSObject, ObservableObject {
     
     func download(torrent: Torrent) {
         state = .pending
-        download = PTTorrentDownloadManager.shared().startDownloading(fromFileOrMagnetLink:  torrent.url, mediaMetadata: self.media.mediaItemDictionary)
+        download = PTTorrentDownloadManager.shared().startDownloading(fromFileOrMagnetLink:  torrent.url, mediaMetadata: self.media.mediaItemDictionary, selectFileTDownload: { fileNames, fileSizes in
+            if fileNames.count == 1 {
+                return Int32(0)
+            }
+            
+            var files = Array(zip(fileNames, fileSizes).enumerated())
+            
+            /// for series, keep only files with format: E01
+            if let episode = self.media as? Episode {
+                let findByEpisode = String(format: "E%02d", episode.episode)
+                files = files.filter { index, item in
+                    item.0.lowercased().contains(findByEpisode.lowercased())
+                }
+            }
+            
+            /// the biggest file
+            let max = files.max { $0.element.1.int64Value < $1.element.1.int64Value  }
+            if let biggestFileIndex = max?.offset { //
+                return Int32(biggestFileIndex)
+            }
+            
+            return 0
+        })
         print("download torrent", torrent)
         if download?.downloadStatus == .failed {
             state = .normal
             showDownloadFailedAlert = true
-        } else {
-            download?.save()
         }
     }
     

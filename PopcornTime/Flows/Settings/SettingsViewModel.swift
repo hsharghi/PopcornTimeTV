@@ -8,6 +8,7 @@
 
 import SwiftUI
 import PopcornKit
+import Network
 
 class SettingsViewModel: ObservableObject {
     @Published var clearCache = ClearCache()
@@ -54,5 +55,15 @@ class SettingsViewModel: ObservableObject {
     func changeUrl(_ url: String) {
         PopcornApi.changeBaseUrl(newUrl: url.isEmpty ? nil : url)
         serverUrl = PopcornApi.shared.customBaseURL
+    }
+    
+    var networkMonitor: NWPathMonitor = {
+        let monitor = NWPathMonitor()
+        monitor.start(queue: .global())
+        return monitor
+    }()
+    
+    var hasCellularNetwork: Bool {
+        return networkMonitor.currentPath.availableInterfaces.contains(where: {$0.type == .cellular }) || networkMonitor.currentPath.isExpensive
     }
 }

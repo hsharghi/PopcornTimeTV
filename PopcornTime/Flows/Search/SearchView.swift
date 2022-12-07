@@ -13,10 +13,19 @@ struct SearchView: View, CharacterHeadshotLoader {
     struct Theme {
         let itemWidth: CGFloat = value(tvOS: 240, macOS: 160)
         let personWidth: CGFloat  = value(tvOS: 220, macOS: 150)
+        var horizontalPadding: CGFloat { value(tvOS: 40, macOS: 40, compactSize: 10) }
+        let itemSpacing: CGFloat = value(tvOS: 30, macOS: 20)
+        let columnSpacing: CGFloat = value(tvOS: 60, macOS: 30)
     }
-    let theme = Theme()
+    static let theme = Theme()
     
     @StateObject var viewModel = SearchViewModel()
+    @FocusState private var isFocused: Bool
+    
+    let columns = [
+        GridItem(.adaptive(minimum: theme.itemWidth), spacing: theme.itemSpacing)
+    ]
+    
     
     var body: some View {
         VStack {
@@ -37,10 +46,15 @@ struct SearchView: View, CharacterHeadshotLoader {
         }
         #if os(iOS) || os(tvOS)
         .searchable(text: $viewModel.search)
+        .focused($isFocused)
         #endif
         #if os(iOS)
         .navigationBarHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if viewModel.search.isEmpty {
+                isFocused = true
+            }
+        }
         #endif
     }
     
@@ -52,15 +66,15 @@ struct SearchView: View, CharacterHeadshotLoader {
             pickerView
             .pickerStyle(.segmented)
         }
-        .padding([.top, .leading, .trailing])
-        .padding(.horizontal, 40)
+        .padding([.leading, .trailing])
+        .padding(.horizontal, SearchView.theme.horizontalPadding)
         #elseif os(tvOS)
         pickerView
         #elseif os(macOS)
-        pickerView
-            .pickerStyle(.segmented)
-            .frame(maxWidth: 200)
-            .padding()
+//        pickerView
+//            .pickerStyle(.segmented)
+//            .frame(maxWidth: 200)
+//            .padding()
         #endif
     }
     
@@ -78,25 +92,17 @@ struct SearchView: View, CharacterHeadshotLoader {
         if viewModel.movies.isEmpty && !viewModel.isLoading {
             emptyView
         } else {
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 40) {
-                    ForEach(viewModel.movies, id: \.self) { movie in
-                        NavigationLink(
-                            destination: MovieDetailsView(viewModel: MovieDetailsViewModel(movie: movie)),
-                            label: {
-                                MovieView(movie: movie)
-                                    .frame(width:theme.itemWidth)
-                            })
-                            .buttonStyle(PlainNavigationLinkButtonStyle())
-                    }
+            scrollContainerView {
+                ForEach(viewModel.movies, id: \.self) { movie in
+                    NavigationLink(
+                        destination: MovieDetailsView(viewModel: MovieDetailsViewModel(movie: movie)),
+                        label: {
+                            MovieView(movie: movie)
+                                .frame(width:SearchView.theme.itemWidth)
+                        })
+                    .buttonStyle(PlainNavigationLinkButtonStyle())
                 }
-                #if os(iOS)
-                    .padding(.leading, 50)
-                #endif
             }
-            #if os(tvOS)
-            .focusSection()
-            #endif
         }
     }
     
@@ -105,25 +111,17 @@ struct SearchView: View, CharacterHeadshotLoader {
         if viewModel.shows.isEmpty && !viewModel.isLoading {
             emptyView
         } else {
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 40) {
-                    ForEach(viewModel.shows, id: \.self) { show in
-                        NavigationLink(
-                            destination: ShowDetailsView(viewModel: ShowDetailsViewModel(show: show)),
-                            label: {
-                                ShowView(show: show)
-                                    .frame(width:theme.itemWidth)
-                            })
-                            .buttonStyle(PlainNavigationLinkButtonStyle())
-                    }
+            scrollContainerView {
+                ForEach(viewModel.shows, id: \.self) { show in
+                    NavigationLink(
+                        destination: ShowDetailsView(viewModel: ShowDetailsViewModel(show: show)),
+                        label: {
+                            ShowView(show: show)
+                                .frame(width:SearchView.theme.itemWidth)
+                        })
+                        .buttonStyle(PlainNavigationLinkButtonStyle())
                 }
-                #if os(iOS)
-                    .padding(.leading, 50)
-                #endif
             }
-            #if os(tvOS)
-            .focusSection()
-            #endif
         }
     }
     
@@ -134,31 +132,19 @@ struct SearchView: View, CharacterHeadshotLoader {
         } else {
             let persons = viewModel.persons
             
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 40) {
-                    ForEach(0..<persons.count, id: \.self) { index in
-                        NavigationLink(
-                            destination: PersonDetailsView(viewModel: PersonDetailsViewModel(person: persons[index])),
-                            label: {
-                                PersonView(person: persons[index], radius: theme.personWidth)
-                            })
-                            .buttonStyle(PlainNavigationLinkButtonStyle())
-                            .task {
-                                await loadHeadshotIfMissing(person: persons[index], into: $viewModel.persons)
-                            }
-                    }
+            scrollContainerView {
+                ForEach(0..<persons.count, id: \.self) { index in
+                    NavigationLink(
+                        destination: PersonDetailsView(viewModel: PersonDetailsViewModel(person: persons[index])),
+                        label: {
+                            PersonView(person: persons[index], radius: SearchView.theme.personWidth)
+                        })
+                        .buttonStyle(PlainNavigationLinkButtonStyle())
+                        .task {
+                            await loadHeadshotIfMissing(person: persons[index], into: $viewModel.persons)
+                        }
                 }
-                #if os(iOS)
-                    .padding(.leading, 50)
-                #endif
-                #if os(tvOS)
-                    .frame(height: 321)
-                #endif
-                Spacer()
             }
-            #if os(tvOS)
-            .focusSection()
-            #endif
         }
     }
     
@@ -172,6 +158,30 @@ struct SearchView: View, CharacterHeadshotLoader {
                 Spacer()
             }
         }
+    }
+    
+    @ViewBuilder
+    func scrollContainerView(content:() -> some View) -> some View {
+        #if os(tvOS)
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 40) {
+                content()
+            }
+            .padding(.leading, 50)
+            Spacer()
+        }
+        .focusSection()
+        #endif
+        
+        #if os(iOS) || os(macOS)
+        ScrollView(.vertical) {
+            LazyVGrid(columns: columns, spacing: SearchView.theme.columnSpacing) {
+                content()
+            }
+            .padding()
+        }
+//        .scrollDismissesKeyboard(.immediately)
+        #endif
     }
     
     @ViewBuilder
@@ -199,6 +209,33 @@ struct SearchView: View, CharacterHeadshotLoader {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView()
+        let searchView = SearchView()
+//        searchView.viewModel.movies = Movie.dummiesFromJSON()
+//        searchView.viewModel.isLoading = true
+//        NavigationView {
+            searchView
+//        }
+//        return searchView
+    }
+}
+
+
+struct ProxySearchStateView: View {
+    @Environment(\.isSearching) var isSearching
+    @Environment(\.dismissSearch) private var dismissSearch
+
+    @Binding var searching: Bool
+    
+    var body: some View {
+        EmptyView()
+            .frame(width: 1)
+            .onChange(of: isSearching) { newValue in
+                searching = newValue
+            }
+            .onChange(of: searching) { newValue in
+                if newValue == false && isSearching == true {
+                    dismissSearch()
+                }
+            }
     }
 }

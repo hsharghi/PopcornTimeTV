@@ -19,12 +19,14 @@ import VLCKit
 struct PlayerOptionsView: View {
     let theme = Theme()
     var media: Media?
-    @State var selectedTab = Selection.info
+    @State var selectedTab = Selection.subtitles
     @Binding var audioDelay: Int
     @Binding var audioProfile: EqualizerProfiles
     @Binding var subtitleDelay: Int
     @Binding var subtitleEncoding: String
     @Binding var subtitle: Subtitle?
+    @Binding var audioTrackIndex: Int
+    var audioTracks: [String]
     
     enum Selection: Int {
         case info = 0, subtitles, audio
@@ -49,7 +51,9 @@ struct PlayerOptionsView: View {
                 .tag(Selection.subtitles)
             AudioView(
                 currentDelay: $audioDelay,
-                currentSound: $audioProfile)
+                currentSound: $audioProfile,
+                audioTrackIndex: $audioTrackIndex,
+                audioTracks: audioTracks)
                 .tabItem {
                     Text("Audio")
                 }
@@ -83,13 +87,16 @@ struct PlayerOptionsView: View {
                               currentSubtitle: $subtitle,
                               viewModel: SubtitlesViewModel(subtitles: media?.subtitles ?? [:]))
             case .audio:
-                AudioView(currentDelay: $audioDelay, currentSound: $audioProfile)
+                AudioView(currentDelay: $audioDelay,
+                          currentSound: $audioProfile,
+                          audioTrackIndex: $audioTrackIndex,
+                          audioTracks: audioTracks)
             }
         }
         .frame(maxWidth: 1024, maxHeight: theme.maxHeight)
         .padding(.bottom, 20)
         .background(VisualEffectBlur().cornerRadius(10))
-        .padding(.horizontal, 50)
+        .padding(.horizontal, theme.horizontalSpacing)
         .padding(.top, 40)
     }
     #endif
@@ -98,6 +105,7 @@ struct PlayerOptionsView: View {
 extension PlayerOptionsView {
     struct Theme {
         let maxHeight: CGFloat = value(tvOS: 440, macOS: 280)
+        let horizontalSpacing: CGFloat = value(tvOS: 50, macOS: 50, compactSize: 0)
     }
 }
 
@@ -106,22 +114,27 @@ struct PlayerOptionsView_Previews: PreviewProvider {
         Group {
             VStack {
                 PlayerOptionsView(media: Movie.dummy(),
-                                  audioDelay: .constant(0),
-                                  audioProfile: .constant(.fullDynamicRange),
-                                  subtitleDelay: .constant(0),
-                                  subtitleEncoding: .constant(""),
-                                  subtitle: .constant(nil))
-                Spacer()
-            }
-            
-            VStack {
-                PlayerOptionsView(media: Movie.dummy(),
                                   selectedTab: PlayerOptionsView.Selection.subtitles,
                                   audioDelay: .constant(0),
                                   audioProfile: .constant(.fullDynamicRange),
                                   subtitleDelay: .constant(0),
                                   subtitleEncoding: .constant(""),
-                                  subtitle: .constant(nil))
+                                  subtitle: .constant(nil),
+                                  audioTrackIndex: .constant(0),
+                                  audioTracks: [])
+                Spacer()
+            }
+            
+            VStack {
+                PlayerOptionsView(media: Movie.dummy(),
+                                  selectedTab: PlayerOptionsView.Selection.info,
+                                  audioDelay: .constant(0),
+                                  audioProfile: .constant(.fullDynamicRange),
+                                  subtitleDelay: .constant(0),
+                                  subtitleEncoding: .constant(""),
+                                  subtitle: .constant(nil),
+                                  audioTrackIndex: .constant(0),
+                                  audioTracks: [])
                 Spacer()
             }
             
@@ -132,7 +145,9 @@ struct PlayerOptionsView_Previews: PreviewProvider {
                                   audioProfile: .constant(.fullDynamicRange),
                                   subtitleDelay: .constant(0),
                                   subtitleEncoding: .constant(""),
-                                  subtitle: .constant(nil))
+                                  subtitle: .constant(nil),
+                                  audioTrackIndex: .constant(0),
+                                  audioTracks: [])
                 Spacer()
             }
         }

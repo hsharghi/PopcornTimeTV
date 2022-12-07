@@ -12,6 +12,7 @@ import PopcornKit
 class WatchlistViewModel: ObservableObject {
     @Published var movies: [Movie] = []
     @Published var shows: [Show] = []
+    var didSyncWithTrack = false
     
     init() {
         
@@ -20,6 +21,15 @@ class WatchlistViewModel: ObservableObject {
     func load() {
         self.movies = WatchlistManager<Movie>.movie.getWatchlist().reversed() // newest first
         self.shows = WatchlistManager<Show>.show.getWatchlist().reversed() //.sorted(by: {$0.title < $1.title})
+        
+        if !didSyncWithTrack {
+            Task { @MainActor in
+                didSyncWithTrack = true
+                try await TraktApi.shared.refreshWatchlist()
+                self.movies = WatchlistManager<Movie>.movie.getWatchlist().reversed() // newest first
+                self.shows = WatchlistManager<Show>.show.getWatchlist().reversed() //.sorted(by: {$0.title < $1.title})
+            }
+        }
     }
     
 }

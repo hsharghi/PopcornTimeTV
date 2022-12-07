@@ -15,7 +15,6 @@ struct SettingsView: View {
     let subtitleSettings = SubtitleSettings.shared
     @StateObject var viewModel = SettingsViewModel()
     
-    @State var showSongVolumeAlert = false
     @State var showQualityAlert = false
     
     @State var showSubtitleLanguageAlert = false
@@ -37,14 +36,17 @@ struct SettingsView: View {
             #if os(tvOS) || os(iOS)
             Image("Icon")
                 .padding(.leading, theme.iconLeading)
+                .hideIfCompactSize()
             #endif
             List() {
                 Section(header: sectionHeader("Player")) {
-                    themeSongVolumeButton
                     removeCacheOnPlayerExitButton
                     qualityAlertButton
+                    if viewModel.hasCellularNetwork {
+                        streamOnCellularButton
+                    }
                 }
-                
+                #if os(tvOS) || os(iOS)
                 Section(header: sectionHeader("Subtitles")) {
                     subtitleLanguageButton
                     subtitleFontSizeButton
@@ -53,7 +55,7 @@ struct SettingsView: View {
                     subtitleFontStyleButton
                     subtitleEncondingButton
                 }
-                
+                #endif
                 Section(header: sectionHeader("Services")) {
                     trackButton
                 }
@@ -74,42 +76,15 @@ struct SettingsView: View {
                         .font(.system(size: theme.fontSize, weight: .medium))
                 }
             }
+            #if os(iOS) || os(tvOS)
             .listStyle(GroupedListStyle())
             .padding(.trailing, theme.iconLeading)
+            #endif
         }
         #if os(iOS)
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-    }
-    
-    @ViewBuilder
-    var themeSongVolumeButton: some View {
-        let volume = NumberFormatter.localizedString(from: NSNumber(value: Session.themeSongVolume), number: .percent)
-        button(text: "Theme Song Volume", value: volume) {
-            showSongVolumeAlert = true
-        }.actionSheet(isPresented: $showSongVolumeAlert) {
-            songVolumeAlert
-        }
-    }
-    
-    var songVolumeAlert: ActionSheet {
-        let actions = [0.25, 0.5, 0.75, 1].map ({ percentage -> Alert.Button in
-            let value = NumberFormatter.localizedString(from: NSNumber(value: percentage), number: .percent)
-            return Alert.Button.default(Text(value)) {
-                Session.themeSongVolume = Float(percentage)
-            }
-        })
-        
-        return ActionSheet(title: Text("Theme Song Volume".localized),
-                    message: Text("Choose a volume for the TV Show and Movie theme songs.".localized),
-                    buttons:[
-                        .cancel(),
-                        .default(Text("Off".localized), action: {
-                            Session.themeSongVolume = 0
-                        })
-                    ] + actions
-        )
     }
     
     @State var clearCacheText = Session.removeCacheOnPlayerExit ? "On".localized : "Off".localized
@@ -121,32 +96,31 @@ struct SettingsView: View {
         }
     }
     
+    @State var streamOnCellularText = Session.streamOnCellular ? "On".localized : "Off".localized
+    @ViewBuilder
+    var streamOnCellularButton: some View {
+        button(text: "Stream on cellular network", value: streamOnCellularText) {
+            Session.streamOnCellular.toggle()
+            streamOnCellularText = Session.streamOnCellular ? "On".localized : "Off".localized
+        }
+    }
+    
     @ViewBuilder
     var qualityAlertButton: some View {
         button(text: "Auto Select Quality", value: Session.autoSelectQuality?.localized ?? "Off".localized) {
             showQualityAlert = true
         }
-        .actionSheet(isPresented: $showQualityAlert) {
-            qualityAlert
-        }
-    }
-    
-    var qualityAlert: ActionSheet {
-        let actions = ["Off", "Highest", "Lowest"].map ({ quality -> Alert.Button in
-            return Alert.Button.default(Text(quality.localized)) {
-                Session.autoSelectQuality = quality == "Off" ? nil : quality
+        .confirmationDialog("Auto Select Quality", isPresented: $showQualityAlert, actions: {
+            ForEach(["Off", "Highest", "Lowest"], id: \.self) { quality in
+                Button(quality) {
+                    Session.autoSelectQuality = quality == "Off" ? nil : quality
+                }
+                Button("Cancel", role: .cancel) { }
             }
-        })
-        
-        return ActionSheet(title: Text("Auto Select Quality"),
-                    message: Text("Choose a default quality. If said quality is available, it will be automatically selected."),
-                    buttons:[
-                        .cancel(),
-                    ] + actions
-        )
+        }, message: { Text("Choose a default quality. If said quality is available, it will be automatically selected.") })
     }
-    
-    
+
+#if os(tvOS) || os(iOS)
     @ViewBuilder
     var subtitleLanguageButton: some View {
         button(text: "Language", value: subtitleSettings.language ?? "None".localized) {
@@ -316,6 +290,7 @@ struct SettingsView: View {
                     ] + actions
         )
     }
+#endif
     
     @ViewBuilder
     var clearCacheButton: some View {
@@ -323,14 +298,10 @@ struct SettingsView: View {
             viewModel.clearCache.emptyCache()
             showClearCacheAlert = true
         }
-        .alert(viewModel.clearCache.message, isPresented: $showClearCacheAlert, actions: {
+        .confirmationDialog(viewModel.clearCache.message, isPresented: $showClearCacheAlert, titleVisibility: .visible, actions: {
             Button("OK") {}
         })
-//        .confirmationDialog(viewModel.clearCache.message, isPresented: $showClearCacheAlert, titleVisibility: .visible, actions: {
-//            Button("OK") {}
-//        })
     }
-    
 
 
     @ViewBuilder
@@ -340,17 +311,20 @@ struct SettingsView: View {
             if viewModel.isTraktLoggedIn {
                 showTraktAlert = true
             } else  {
-                #if os(tvOS)
+                #if os(tvOS) || os(macOS)
                 showTraktView = true
                 #else
                 openURL(viewModel.traktAuthorizationUrl)
                 #endif
             }
         }
-        .actionSheet(isPresented: $showTraktAlert) {
-            traktAlert
-        }
-        #if os(tvOS)
+        .confirmationDialog("Sign Out", isPresented: $showTraktAlert, actions: {
+            Button("Sign Out") {
+                viewModel.traktLogout()
+            }
+            Button("Cancel", role: .cancel, action: {})
+        }, message: { Text("Are you sure you want to Sign Out?") })
+        #if os(tvOS) || os(macOS)
         .fullScreenContent(isPresented: $showTraktView, title: "Trakt") {
             TraktView(viewModel: TraktViewModel(onSuccess: {
                 self.viewModel.traktDidLoggedIn()
@@ -363,19 +337,6 @@ struct SettingsView: View {
         }
         #endif
     }
-
-    var traktAlert: ActionSheet {
-        return ActionSheet(title: Text("Sign Out"),
-                    message: Text("Are you sure you want to Sign Out?"),
-                    buttons:[
-                        .default(Text("Sign Out"), action: {
-                            viewModel.traktLogout()
-                        }),
-                        .cancel(),
-                    ]
-        )
-    }
-    
     
     func button(text: LocalizedStringKey, value: String, action: @escaping () -> Void) -> some View {
         Button(action: {
@@ -389,6 +350,9 @@ struct SettingsView: View {
             }
             .font(.system(size: theme.fontSize, weight: .medium))
         })
+        #if os(macOS)
+        .buttonStyle(.borderless)
+        #endif
     }
     
     func sectionHeader(_ text: String) -> some View {
@@ -400,7 +364,7 @@ extension SettingsView {
     struct Theme {
         let fontSize: CGFloat = value(tvOS: 38, macOS: 20)
         let hStackSpacing: CGFloat = value(tvOS: 300, macOS: 50)
-        let iconLeading: CGFloat = value(tvOS: 100, macOS: 50)
+        var iconLeading: CGFloat { value(tvOS: 100, macOS: 50, compactSize: 0) }
     }
 }
 

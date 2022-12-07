@@ -12,11 +12,7 @@ import PopcornKit
 struct SeasonPickerView: View, SeasonPosterLoader {
     @StateObject var viewModel: SeasonPickerViewModel
     @Binding var selectedSeasonNumber: Int
-    #if os(macOS)
-    @Environment(\.macDismiss) var dismiss
-    #else
     @Environment(\.dismiss) var dismiss
-    #endif
     #if os(tvOS)
     @FocusState var focusedField: Int?
     #endif

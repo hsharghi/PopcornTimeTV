@@ -10,22 +10,18 @@ import SwiftUI
 
 struct SearchBarView: View {
     @Binding var text: String
-    enum Field: Hashable {
-        case search
-    }
-     
-    @FocusState private var focused: Field?
+    @FocusState private var isFocused: Bool
  
     var body: some View {
         HStack {
             TextField("Search ...", text: $text)
+                .focused($isFocused)
                 .padding(7)
                 .padding(.horizontal, 25)
             #if os(iOS)
                 .background(Color(.systemGray6))
             #endif
                 .cornerRadius(8)
-                .focused($focused, equals: .search)
                 .overlay(
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -33,7 +29,7 @@ struct SearchBarView: View {
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
                  
-                        if focused == .search && text.count > 0 {
+                        if isFocused && text.count > 0 {
                             Button(action: {
                                 self.text = ""
                             }) {
@@ -46,26 +42,30 @@ struct SearchBarView: View {
                     }
                 )
  
-            if focused == .search {
+            if isFocused {
                 Button(action: {
 //                    self.text = ""
-                    self.focused = nil
+                    self.isFocused = false
                 }) {
                     Text("Cancel")
                 }
                 .padding(.trailing, 10)
+                .frame(height: 36)
                 .transition(.move(edge: .trailing))
-                .animation(.default)
+                .animation(.default, value: true)
             }
         }
+//        .statusBar(hidden: isFocused)
     }
 }
 
 struct SearchBarView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBarView(text: .constant(""))
-            .previewLayout(.sizeThatFits)
-            .padding()
+        VStack {
+            SearchBarView(text: .constant(""))
+                .padding()
+            Spacer()
+        }
         
         SearchBarView(text: .constant("23"))
             .previewLayout(.sizeThatFits)

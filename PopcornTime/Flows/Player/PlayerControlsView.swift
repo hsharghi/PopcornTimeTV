@@ -18,12 +18,12 @@ struct PlayerControlsView: View {
             #if os(iOS)
             topView
                 .padding([.leading, .trailing], 20)
-                .padding(.top, 20)
+                .padding(.top, 10)
             #endif
             Spacer()
             bottomView
                 .padding([.leading, .trailing], 20)
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
         }
         .accentColor(.white)
     }
@@ -32,12 +32,12 @@ struct PlayerControlsView: View {
     var topView: some View {
         HStack(alignment: .center, spacing: 0) {
             HStack(spacing: 0) {
-                closeButton
-                    .background(.regularMaterial)
-                ratioButton
+                Group {
+                    closeButton
+                    ratioButton
+                }
+                .shadow(color: .gray, radius: 2, x: 0, y: 0)
             }
-            .background(.regularMaterial)
-            .cornerRadius(10)
             
             Spacer()
             #if os(iOS)
@@ -46,9 +46,6 @@ struct PlayerControlsView: View {
             })
                 .frame(width: 200)
                 .padding([.leading, .trailing], 10)
-                .background(.regularMaterial)
-                .cornerRadius(10)
-                
             #endif
         }
         .frame(height: 46)
@@ -57,11 +54,35 @@ struct PlayerControlsView: View {
     
     @ViewBuilder
     var bottomView: some View {
+        #if os(iOS)
+        let multiplier = UIDevice.current.userInterfaceIdiom == .phone ? 0.8 : 1
+        Spacer()
+        HStack(spacing: 60) {
+            Group {
+                rewindButton(width: 55 * multiplier, imageInset: 20)
+                playButton(width: 90 * multiplier, imageInset: 25)
+                forwardButton(width: 55 * multiplier, imageInset: 20)
+            }
+            .background {
+                Circle()
+                    .fill(Color(white: 0.2, opacity: 0.5))
+            }
+        }
+        .buttonStyle(.plain)
+        Spacer()
+        bottomViewCompact
+        #else
+        bottomViewRegular
+        #endif
+    }
+    
+    @ViewBuilder
+    var bottomViewRegular: some View {
         HStack(spacing: 10) {
-            rewindButton
-            playButton
+            rewindButton()
+            playButton()
                 .padding([.leading, .trailing], 4)
-            forwardButton
+            forwardButton()
             Text(viewModel.progress.isScrubbing ? viewModel.progress.scrubbingTime : viewModel.progress.elapsedTime)
                 .monospacedDigit()
                 .foregroundColor(.gray)
@@ -88,8 +109,35 @@ struct PlayerControlsView: View {
                 .background(.regularMaterial)
                 .cornerRadius(10)
         }
-//        .background(.regularMaterial)
-//        .cornerRadius(10)
+        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    var bottomViewCompact: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 10) {
+                progressView
+            }
+            HStack(spacing: 10) {
+                Group {
+                    Text(viewModel.progress.isScrubbing ? viewModel.progress.scrubbingTime : viewModel.progress.elapsedTime)
+                    Spacer()
+                    AirplayView()
+                        .frame(width: 40)
+                    subtitlesButton
+                        .frame(width: 40)
+                    Text(viewModel.progress.remainingTime)
+                }
+                .monospacedDigit()
+                .foregroundColor(.white)
+                .frame(height: 20)
+                .frame(minWidth: 40)
+                .shadow(color: .gray, radius: 2, x: 0, y: 0)
+            }
+        }
+        .tint(.white)
+        .frame(maxWidth: 1000)
+        .padding([.leading, .trailing], 10)
         .buttonStyle(.plain)
     }
     
@@ -118,6 +166,7 @@ struct PlayerControlsView: View {
                 })) { started in
                     viewModel.clickGesture()
                 }
+                .tint(Color(white: 1, opacity: 0.9))
                 .overlay(content: {
                     snapshotImage
                 })
@@ -152,7 +201,12 @@ struct PlayerControlsView: View {
             }
         } label: {
             Color.clear
-                .overlay(Image("CloseiOS"))
+                .overlay(
+                    Image("CloseiOS")
+                        .renderingMode(.template)
+                        .tint(.white)
+                )
+                
         }
         .frame(width: 46)
     }
@@ -168,7 +222,7 @@ struct PlayerControlsView: View {
                     Image(viewModel.videoAspectRatio == .fit ?  "Scale To Fill" : "Scale To Fit")
                         .resizable()
                         .renderingMode(.template)
-                        .tint(.gray)
+                        .tint(.white)
                         .frame(width: 22, height: 22)
                 }
         }
@@ -179,47 +233,55 @@ struct PlayerControlsView: View {
     }
     
     @ViewBuilder
-    var playButton: some View {
+    func playButton(width: CGFloat = 32, imageInset: CGFloat = 7) -> some View {
         Button {
             viewModel.playandPause()
         } label: {
-            viewModel.isPlaying ? Image("Pause") : Image("Play")
+            Image(viewModel.isPlaying ? "Pause" : "Play")
+                .resizable()
+                .frame(width: width - imageInset, height: width - imageInset)
+                .frame(width: width, height: width)
+                .contentShape(Rectangle())
         }
         .disabled(viewModel.isLoading)
-        .frame(width: 32)
+        .frame(width: width)
     }
     
     @ViewBuilder
-    var rewindButton: some View {
+    func rewindButton(width: CGFloat = 32, imageInset: CGFloat = 7) -> some View {
         Button {
             viewModel.rewind()
         } label: {
             Image("SkipBack30") //"Rewind"
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: width - imageInset, height: width - imageInset)
+                .frame(width: width, height: width)
+                .contentShape(Rectangle())
         }
         .onLongPressGesture(perform: {}, onPressingChanged: { started in
             viewModel.rewindHeld(started)
         })
         .disabled(viewModel.isLoading || viewModel.progress.progress == 0.0)
-        .frame(width: 32)
+        .frame(width: width)
     }
     
     @ViewBuilder
-    var forwardButton: some View {
+    func forwardButton(width: CGFloat = 32, imageInset: CGFloat = 7) -> some View {
         Button {
             viewModel.fastForward()
         } label: {
 //            Image("Fast Forward")
             Image("SkipForward30")
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: width - imageInset, height: width - imageInset)
+                .frame(width: width, height: width)
+                .contentShape(Rectangle())
         }
         .disabled(viewModel.isLoading || viewModel.progress.progress == 1.0)
         .onLongPressGesture(perform: {}, onPressingChanged: { started in
             viewModel.fastForwardHeld(started)
         })
-        .frame(width: 32)
+        .frame(width: width)
     }
     
 //    @ViewBuilder
@@ -244,6 +306,7 @@ struct PlayerControlsView: View {
                 .foregroundColor(.gray)
                 .padding(.top, 2)
                 .padding(.leading, -3)
+                .frame(width: 40)
         }
         .frame(width: 32)
     }
@@ -251,11 +314,20 @@ struct PlayerControlsView: View {
 
 struct PlayerControlsView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerControlsView()
-            .preferredColorScheme(.dark)
-            .background(.red)
-            .environmentObject(playingPlayerModel)
-            .previewInterfaceOrientation(.landscapeLeft)
+        Group {
+            PlayerControlsView()
+                .preferredColorScheme(.dark)
+                .background(.white)
+                .environmentObject(playingPlayerModel)
+                .previewInterfaceOrientation(.landscapeLeft)
+                .previewDisplayName("White background")
+            PlayerControlsView()
+                .preferredColorScheme(.dark)
+                .background(.blue)
+                .environmentObject(playingPlayerModel)
+                .previewInterfaceOrientation(.landscapeLeft)
+                .previewDisplayName("Black background")
+        }
         
         PlayerControlsView()
             .preferredColorScheme(.dark)

@@ -58,11 +58,15 @@ class DownloadsViewModel: NSObject, ObservableObject {
 
 extension DownloadsViewModel: PTTorrentDownloadManagerListener {
     func downloadStatusDidChange(_ downloadStatus: PTTorrentDownloadStatus, for download: PTTorrentDownload) {
-        self.reload()
+        DispatchQueue.main.async {
+            self.reload()
+        }
     }
     
     func downloadDidFail(_ download: PTTorrentDownload, withError error: Error) {
-        self.error = error
-        self.reload()
+        DispatchQueue.main.async {
+            self.error = error
+            self.reload()
+        }
     }
 }

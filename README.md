@@ -4,10 +4,10 @@
 
 ## Popcorn Time for tvOS | iOS | macOS
 
-[![Platform](http://img.shields.io/badge/platform-iOS%20%7C%20tvOS-lightgrey.svg?style=flat)](https://github.com/PopcornTimeTV)
+[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20tvOS%20%7C%20macOS-lightgrey.svg?style=flat)](https://github.com/PopcornTimeTV)
 [![License](https://img.shields.io/badge/license-GPL_v3-373737.svg?style=flat)](https://github.com/PopcornTimeTV/PopcornTimeTV/blob/master/LICENSE.md)
 
-PopcornTimeTV is an Apple TV, iPhone and iPad application to torrent movies and tv shows for streaming.
+PopcornTimeTV is an Apple TV, iPhone, iPad and Mac application to torrent movies and tv shows for streaming.
 
 ## Compile yourself?
 

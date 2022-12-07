@@ -26,7 +26,7 @@ struct SubtitlesView: View {
                     .frame(width: theme.languageSectionWidth)
                 delaySection
                 #if os(iOS)
-                    .frame(width: 150)
+                    .frame(width: theme.delaySectionWidth)
                 #endif
                 encodingSection
                 
@@ -35,7 +35,7 @@ struct SubtitlesView: View {
                 ExtendedSubtitlesView(currentSubtitle: subtitleBinding,
                                       subtitles: viewModel.subtitles,
                                       isPresented: $showExtendedSubtitles)
-                    .padding(.horizontal, 10)
+                .padding(.horizontal, theme.extendedSpacing)
             }
         }
         #if os(tvOS)
@@ -114,9 +114,11 @@ struct SubtitlesView: View {
                         }
                     }
                 }
-                .onAppear(perform: {
-                    scroll.scrollTo(currentDelay, anchor: .center)
-                })
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        scroll.scrollTo(currentDelay, anchor: .center)
+                    }
+                }
             }
         }
         #if os(tvOS)
@@ -167,7 +169,7 @@ struct SubtitlesView: View {
         Button(action: {
             action()
         }, label: {
-            HStack(spacing: 20) {
+            HStack(spacing: theme.textButtonSpacing) {
                 if (isSelected) {
                     Image(systemName: "checkmark")
                 } else {
@@ -185,11 +187,14 @@ struct SubtitlesView: View {
 
 extension SubtitlesView {
     struct Theme {
-        let sectionLeading: CGFloat = value(tvOS: 100, macOS: 50)
-        let sectionFontSize: CGFloat = value(tvOS: 32, macOS: 20)
-        let contentFontSize: CGFloat = value(tvOS: 31, macOS: 19)
+        let sectionLeading: CGFloat = value(tvOS: 100, macOS: 50, compactSize: 5)
+        let sectionFontSize: CGFloat = value(tvOS: 32, macOS: 20, compactSize: 17)
+        let contentFontSize: CGFloat = value(tvOS: 31, macOS: 19, compactSize: 16)
         let noLanguageFontSize: CGFloat = value(tvOS: 35, macOS: 23)
-        let languageSectionWidth: CGFloat = value(tvOS: 390, macOS: 250)
+        let languageSectionWidth: CGFloat = value(tvOS: 390, macOS: 250, compactSize: 150)
+        let delaySectionWidth: CGFloat = value(tvOS: 0, macOS: 150, compactSize: 100)
+        let textButtonSpacing: CGFloat = value(tvOS: 20, macOS: 20, compactSize: 5)
+        let extendedSpacing: CGFloat = value(tvOS: 10, macOS: 10, compactSize: 0)
     }
 }
 

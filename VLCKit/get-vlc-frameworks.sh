@@ -1,14 +1,14 @@
 #!/bin/sh
 # View latest releases on https://download.videolan.org/pub/cocoapods/prod/
 # or list them
-# curl "https://download.videolan.org/pub/cocoapods/prod/" | grep "3.4.1b9
+# curl "https://download.videolan.org/pub/cocoapods/prod/" | grep "3.4.1b11
 
 mkdir -p "VLCKit"
 cd VLCKit
 
-IOS_VERSION="3.4.1b9-f13930e4-cabe90d1"
-TV_VERSION="3.4.1b9-f13930e4-cabe90d1"
-MAC_VERSION="3.4.1b9-f13930e4-cabe90d1"
+IOS_VERSION="3.5.0-7bb96520-e9eceaed"
+TV_VERSION="3.5.0-7bb96520-e9eceaed"
+MAC_VERSION="3.5.0-7bb96520-e9eceaed"
 
 TV_URL="https://download.videolan.org/pub/cocoapods/prod/TVVLCKit-${TV_VERSION}.tar.xz"
 iOS_URL="https://download.videolan.org/pub/cocoapods/prod/MobileVLCKit-${IOS_VERSION}.tar.xz"

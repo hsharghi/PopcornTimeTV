@@ -347,6 +347,11 @@ open class TraktApi {
         }
     }
     
+    open func refreshWatchlist() async throws {
+        _ = try await WatchlistManager<Movie>.movie.refreshWatchlist()
+        _ = try await WatchlistManager<Show>.show.refreshWatchlist()
+    }
+    
     /**
      Requests tmdb id for object with imdb id.
      

@@ -70,6 +70,7 @@ public struct TMDB {
     static let images = "/images"
     static let season = "/season"
     static let episode = "/episode"
+    static let videos = "/videos"
     
     public enum MediaType: String {
         case movies = "movie"

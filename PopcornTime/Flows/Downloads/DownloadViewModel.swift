@@ -52,6 +52,7 @@ class DownloadViewModel: NSObject, ObservableObject {
     
     func pause() {
         downloadManager.pause(download)
+        download.save()
     }
     
     var imageUrl: String {

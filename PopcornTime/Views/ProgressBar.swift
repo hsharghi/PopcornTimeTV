@@ -180,6 +180,13 @@ class ProgressBar: UIView {
         rightHintImageView.contentMode = .center
         rightHintImageView.tintColor = .white
         
+        let blurView = UIVisualEffectView()
+        blurView.effect = UIBlurEffect(style: .dark)
+        blurView.frame = self.bounds
+        blurView.alpha = 0.5
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        addSubview(blurView)
         addSubview(bufferingBar)
         addSubview(screenshotImageView)
         addSubview(elapsedTimeLabel)

@@ -8,13 +8,18 @@
 
 import PopcornKit
 import SwiftUI
+import Combine
 
 class ShowDetailsViewModel: ObservableObject {
     @Published var show: Show
-    var error: Error?
+    @Published var error: Error?
     @Published var currentSeason = -1 {
         didSet {
             latestUnwatchedEpisode = show.latestUnwatchedEpisode(from: self.seasonEpisodes())
+            self.trailerModel = TrailerButtonViewModel(show: self.show, season: currentSeason)
+            self.trailerErrorObserver = trailerModel.$error.sink(receiveValue: { [unowned self] error in
+                self.objectWillChange.send()
+            })
         }
     }
     
@@ -23,9 +28,15 @@ class ShowDetailsViewModel: ObservableObject {
     var latestUnwatchedEpisode: Episode?
     @Published var persons: [Person] = []
     @Published var related: [Show] = []
+    @ObservedObject var trailerModel: TrailerButtonViewModel
+    var trailerErrorObserver: AnyCancellable?
     
     init(show: Show) {
         self.show = show
+        self.trailerModel = TrailerButtonViewModel(show: show, season: 1)
+        self.trailerErrorObserver = trailerModel.$error.sink(receiveValue: { [unowned self] error in
+            self.objectWillChange.send()
+        })
     }
     
     var backgroundUrl: URL? {

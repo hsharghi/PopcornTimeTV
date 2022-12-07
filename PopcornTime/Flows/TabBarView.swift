@@ -24,8 +24,8 @@ struct TabBarView: View {
     }
     @State var selectedTab = Selection.movies
     #if os(macOS)
-    @Environment(\.popToRoot) var popToRoot
     @State var isVisible = false
+    @State var isSearching = false
     #endif
     
     @StateObject var searchModel = SearchViewModel()
@@ -33,6 +33,14 @@ struct TabBarView: View {
     var body: some View {
         #if os(iOS) || os(tvOS)
         TabView(selection: $selectedTab) {
+            SearchView()
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    #if os(iOS)
+                    Text("Search")
+                    #endif
+                }
+                .tag(Selection.search)
             MoviesView()
                 .tabItem {
                     #if os(iOS)
@@ -57,11 +65,6 @@ struct TabBarView: View {
                     Text("Watchlist")
                 }
                 .tag(Selection.watchlist)
-            SearchView()
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                }
-                .tag(Selection.search)
             DownloadsView()
                 .tabItem {
                     #if os(iOS)
@@ -96,43 +99,43 @@ struct TabBarView: View {
                 .hide(selectedTab != .search)
             DownloadsView()
                 .hide(selectedTab != .downloads)
-            if isVisible {
-                EmptyView()
-                    .searchable(text: $searchModel.search)
-            }
+            ProxySearchStateView(searching: $isSearching)
         }
-        .onChange(of: searchModel.search, perform: { newValue in
-            selectedTab = .search
-        })
-        .onAppear(perform: {
-            isVisible = true
-        })
-        .onDisappear(perform: {
-            isVisible = false
-        })
         .environment(\.currentTab, selectedTab)
         .toolbar(content: {
             ToolbarItem(placement: .principal) {
-                Picker("", selection: .init(get: {
-                    selectedTab
-                }, set: { newValue in
-                    selectedTab = newValue
-                    popToRoot()
-                })) {
-                    Text("Movies").tag(Selection.movies)
-                    Text("Shows").tag(Selection.shows)
-                    Text("Watchlist").tag(Selection.watchlist)
-                    Text("Downloads").tag(Selection.downloads)
-//                     Image(systemName: "magnifyingglass").tag(Selection.search)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-
-            }
-            
-            ToolbarItem(placement: .principal) {
-                Spacer()
+                if selectedTab == .search {
+                    Picker("", selection: $searchModel.selection) {
+                         Text("Movies").tag(SearchViewModel.SearchType.movies)
+                         Text("Shows").tag(SearchViewModel.SearchType.shows)
+                         Text("People").tag(SearchViewModel.SearchType.people)
+                    }
+                    .pickerStyle(.segmented)
+                } else {
+                    Picker("", selection: $selectedTab) {
+                        Text("Movies").tag(Selection.movies)
+                        Text("Shows").tag(Selection.shows)
+                        Text("Watchlist").tag(Selection.watchlist)
+                        Text("Downloads").tag(Selection.downloads)
+                        //                     Image(systemName: "magnifyingglass").tag(Selection.search)
+                    }
+                    .pickerStyle(.segmented)
+                }   
             }
         })
+        .searchable(text: $searchModel.search)
+        .onChange(of: selectedTab) { newValue in
+            if selectedTab != .search && isSearching {
+                isSearching = false
+            }
+        }
+        .onChange(of: isSearching) { newValue in
+            if selectedTab != .search && isSearching {
+                selectedTab = .search
+            } else if selectedTab == .search && !isSearching {
+                selectedTab = .movies
+            }
+        }
         #endif
     }
 }
@@ -140,5 +143,7 @@ struct TabBarView: View {
 struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {
         TabBarView()
+            .preferredColorScheme(.dark)
+            .tint(.white)
     }
 }

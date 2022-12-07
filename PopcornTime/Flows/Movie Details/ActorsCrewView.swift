@@ -14,7 +14,7 @@ struct ActorsCrewView: View, CharacterHeadshotLoader {
         let height: CGFloat = value(tvOS: 321, macOS: 218)
         let cellWidth: CGFloat = value(tvOS: 220, macOS: 150)
         let spacing: CGFloat = value(tvOS: 80, macOS: 30)
-        let leading: CGFloat = value(tvOS: 90, macOS: 50)
+        var leading: CGFloat { value(tvOS: 90, macOS: 50, compactSize: 20) }
     }
     let theme = Theme()
     

@@ -18,7 +18,7 @@ struct LoadExternalTorrentView: View {
                 .ignoresSafeArea()
             VStack {
                 Spacer()
-                Text("Please navigate to the webpage \(viewModel.displayUrl) and insert the magnet link of the torrent you would like to play")
+                Text("Please navigate to the webpage \n\(viewModel.displayUrl)\n and insert the magnet link of the torrent you would like to play")
                     .font(.headline)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 900)

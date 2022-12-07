@@ -109,8 +109,13 @@ struct DownloadButton: View {
                      Button(role: .destructive, action: {
                          self.viewModel.stopDownload()
                      }, label: { Text("Stop") })
+                    Button { showPlayer = true } label: { Text("Play") }
         })
-
+        .fullScreenContent(isPresented: $showPlayer, title: viewModel.media.title) {
+            TorrentPlayerView(torrent: viewModel.torrent ?? Torrent(),
+                              media: viewModel.media,
+                              nextEpisode: NextEpisode(media: viewModel.media)?.next())
+        }
         .alert(isPresented: $viewModel.showDownloadFailedAlert, content: {
             Alert(title: Text( "Download Failed"),
                   message: Text(viewModel.downloadError?.localizedDescription ?? ""),

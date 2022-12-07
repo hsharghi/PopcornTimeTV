@@ -23,9 +23,13 @@ class PlayerAudioModel {
     var audioProfileBinding: Binding<EqualizerProfiles> = .constant(.fullDynamicRange)
     var audioDelayBinding: Binding<Int> = .constant(0)
     
+    var audioTracksNames: () -> [String] = { return [] }
+    var audioTrackBinding: Binding<Int> = .constant(0)
+    
     init(mediaplayer: VLCMediaPlayer) {
         self.mediaplayer = mediaplayer
         mediaplayer.currentAudioPlaybackDelay = 0
+        audioTracksNames = { mediaplayer.audioTrackNames.map({ $0 as! String }) }
         
         audioDelayBinding = Binding(get: {
             mediaplayer.currentAudioPlaybackDelay / 1_000_000 // from microseconds to seconds
@@ -40,9 +44,15 @@ class PlayerAudioModel {
             didSelectEqualizerProfile(profile)
         })
         
+        audioTrackBinding = Binding(get: {
+            return Int(mediaplayer.currentAudioTrackIndex)
+        }, set: { trackIndex in
+            mediaplayer.currentAudioTrackIndex = Int32(trackIndex)
+        })
+        
         #if os(iOS) || os(tvOS)
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [.allowBluetoothA2DP, .allowAirPlay,])
-        try? AVAudioSession.sharedInstance().setActive(true, options: [])
+//        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [.allowBluetoothA2DP, .allowAirPlay,])
+//        try? AVAudioSession.sharedInstance().setActive(true, options: [])
         didSelectEqualizerProfile(.fullDynamicRange)
         #endif
     }

@@ -23,7 +23,7 @@ struct ExtendedSubtitlesView: View {
     }
     
     var body: some View {
-        HStack (alignment:.top, spacing: 25) {
+        HStack (alignment:.top, spacing: theme.sectionSpacing) {
             Spacer()
             subtitlesSection
             languageSection
@@ -110,7 +110,7 @@ struct ExtendedSubtitlesView: View {
         Button(action: {
             action()
         }, label: {
-            HStack(spacing: 20) {
+            HStack(spacing: theme.textButtonSpacing) {
                 if (isSelected) {
                     Image(systemName: "checkmark")
                 } else {
@@ -121,7 +121,7 @@ struct ExtendedSubtitlesView: View {
                 Spacer()
                 
             }
-            .padding([.leading, .trailing], 50) // allow space for scale animation
+            .padding([.leading, .trailing], theme.sectionLeading) // allow space for scale animation
         })
         .buttonStyle(PlainButtonStyle(onFocus: {}))
     }
@@ -129,20 +129,23 @@ struct ExtendedSubtitlesView: View {
 
 extension ExtendedSubtitlesView {
     struct Theme {
-        let sectionFontSize: CGFloat = value(tvOS: 38, macOS: 25)
-        let contentFontSize: CGFloat = value(tvOS: 32, macOS: 20)
+        let sectionFontSize: CGFloat = value(tvOS: 38, macOS: 25, compactSize: 17)
+        let sectionLeading: CGFloat = value(tvOS: 50, macOS: 25, compactSize: 5)
+        let sectionSpacing: CGFloat = value(tvOS: 25, macOS: 25, compactSize: 0)
+        let contentFontSize: CGFloat = value(tvOS: 32, macOS: 20, compactSize: 16)
         let maxHeight: CGFloat = value(tvOS: 860, macOS: 400)
+        let textButtonSpacing: CGFloat = value(tvOS: 20, macOS: 20, compactSize: 5)
     }
 }
 
 
 struct ExtendedSubtitlesView_Previews: PreviewProvider {
     static var previews: some View {
-        let subtitle = Subtitle(name: "Test", language: "English", link: "", ISO639: "", rating: 0)
+        let subtitle = Subtitle(name: "Test long testing running on this device", language: "English", link: "", ISO639: "", rating: 0)
         Group {
             ExtendedSubtitlesView(
                 currentSubtitle: .constant(subtitle),
-                subtitles: [Locale.current.localizedString(forLanguageCode: "en")! : [subtitle]],
+                subtitles: [Locale.current.localizedString(forLanguageCode: "en")! : [subtitle], Locale.current.localizedString(forLanguageCode: "ro")! : [subtitle]],
                 isPresented: .constant(true)
             )
         }

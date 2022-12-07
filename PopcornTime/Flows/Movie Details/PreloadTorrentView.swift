@@ -36,6 +36,21 @@ struct PreloadTorrentView: View {
             .alert(isPresented: $viewModel.showError, content: {
                 errorAlert
             })
+            #if os(iOS) || os(tvOS)
+            .confirmationDialog("Select file to play", isPresented: $viewModel.showFileToPlay, titleVisibility: .visible, actions: {
+                chooseFilesButtons(fileNames: viewModel.filesToPlay)
+            })
+            #elseif os(macOS)
+            .popover(isPresented: $viewModel.showFileToPlay, content: {
+                VStack {
+                    Text("Select file to play")
+                    chooseFilesButtons(fileNames: viewModel.filesToPlay)
+                        .controlSize(.large)
+                }
+                .font(.system(size: 16))
+                .padding(20)
+            })
+            #endif
         }
         .accentColor(.white)
     }
@@ -92,6 +107,21 @@ struct PreloadTorrentView: View {
                   dismissButton: .cancel(Text("Cancel"), action: {
                     dismiss()
                   }))
+        }
+    }
+    
+    @ViewBuilder
+    func chooseFilesButtons(fileNames: [String]) -> some View  {
+        ForEach(fileNames, id: \.self) { fileName in
+            Button {
+                viewModel.selectedFileToPlay = fileName
+                viewModel.showFileToPlay = false
+            } label: {
+                Text(fileName)
+                #if os(macOS)
+                Spacer()
+                #endif
+            }
         }
     }
 }

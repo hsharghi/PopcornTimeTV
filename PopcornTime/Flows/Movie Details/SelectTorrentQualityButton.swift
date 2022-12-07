@@ -8,6 +8,9 @@
 
 import SwiftUI
 import PopcornKit
+import Network
+
+let networkMonitor = NWPathMonitor()
 
 struct SelectTorrentQualityButton<Label>: View where Label : View {
     var media: Media
@@ -28,13 +31,10 @@ struct SelectTorrentQualityButton<Label>: View where Label : View {
     
     var body: some View {
         return Button(action: {
-            #if os(iOS)
-            if UIDevice.current.hasCellularCapabilites &&
-                Session.reachability.connection != .wifi && !Session.streamOnCellular {
+            if !Session.streamOnCellular && networkMonitor.currentPath.isExpensive {
                 alert = .init(id: .streamOnCellular)
                 return
             }
-            #endif
             
             if media.torrents.count == 0 {
                 alert = .init(id: .noTorrentsFound)
@@ -74,12 +74,17 @@ struct SelectTorrentQualityButton<Label>: View where Label : View {
             }
             
         }
+        .onAppear {
+            if networkMonitor.queue == nil {
+                networkMonitor.start(queue: .global())
+            }
+        }
     }
     
     var autoSelectTorrent: Torrent? {
         if let quality = Session.autoSelectQuality {
             let sorted  = media.torrents.sorted(by: <)
-            let torrent = quality == "Highest".localized ? sorted.last! : sorted.first!
+            let torrent = quality == "Highest" ? sorted.last! : sorted.first!
             return torrent
         }
         

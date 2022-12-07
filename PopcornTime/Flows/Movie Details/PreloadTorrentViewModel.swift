@@ -28,6 +28,8 @@ class PreloadTorrentViewModel: ObservableObject {
     @Published var error: Error?
     @Published var showError = false
     @Published var showFileToPlay = false
+    @Published var filesToPlay: [String] = []
+    @Published var selectedFileToPlay: String?
     @Published var playerModel: PlayerViewModel?
     @Published var clearCache = ClearCache()
     
@@ -120,7 +122,7 @@ class PreloadTorrentViewModel: ObservableObject {
         
         if url.hasPrefix("magnet") || (url.hasSuffix(".torrent") && !url.hasPrefix("http")) {
             self.streamer = PTTorrentStreamer()
-            self.streamer!.startStreaming(fromFileOrMagnetLink: url, progress: { (status) in
+            self.streamer!.startStreaming(fromMultiTorrentFileOrMagnetLink: url, progress: { (status) in
                 loadingBlock(status)
             }, readyToPlay: { (videoFileURL, videoFilePath) in
                 playBlock(videoFileURL, videoFilePath, self.media, nextEpisode)
@@ -128,6 +130,13 @@ class PreloadTorrentViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     errorBlock(error)
                 }
+            }, selectFileToStream: { fileNames, fileSizes in
+                let description = zip(fileNames, fileSizes)
+                    .map {"\($0) - \(ByteCountFormatter.string(fromByteCount:Int64(truncating: $1), countStyle: .binary))"}
+                    .joined(separator:"\n")
+                print("torrent files:", description)
+                
+                return self.selectFileToStream(fileNames: fileNames, fileSizes: fileSizes)
             })
         } else {
             Task { @MainActor in
@@ -165,5 +174,39 @@ class PreloadTorrentViewModel: ObservableObject {
             return true
         }
         return false
+    }
+    
+    func selectFileToStream(fileNames: [String], fileSizes: [NSNumber]) -> Int32 {
+        if fileNames.count == 1 {
+            return Int32(0)
+        }
+        
+        var files = Array(zip(fileNames, fileSizes).enumerated())
+        
+        /// for series, keep only files with format: E01
+        if let episode = self.media as? Episode {
+            let findByEpisode = String(format: "E%02d", episode.episode)
+            files = files.filter { index, item in
+                item.0.lowercased().contains(findByEpisode.lowercased())
+            }
+        }
+        
+        /// the biggest file
+        let max = files.max { $0.element.1.int64Value < $1.element.1.int64Value  }
+        if let biggestFileIndex = max?.offset { //
+            return Int32(biggestFileIndex)
+        }
+        
+        // let user select
+        DispatchQueue.main.async {
+            self.filesToPlay = fileNames
+            self.showFileToPlay = true
+        }
+        while self.selectedFileToPlay == nil {
+            sleep(1)
+            print("hold")
+        }
+        let index = fileNames.firstIndex(of: self.selectedFileToPlay!)!
+        return Int32(index)
     }
 }

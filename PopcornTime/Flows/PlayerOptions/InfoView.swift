@@ -88,11 +88,11 @@ struct InfoView: View {
 
 extension InfoView {
     struct Theme {
-        let sectionFontSize: CGFloat = value(tvOS: 32, macOS: 20)
+        let sectionFontSize: CGFloat = value(tvOS: 32, macOS: 20, compactSize: 20)
         let contentFontSize: CGFloat = value(tvOS: 30, macOS: 18)
         let noContentFontSize: CGFloat = value(tvOS: 35, macOS: 23)
-        let leading: CGFloat = value(tvOS: 80, macOS: 40)
-        let imageMaxWidth: CGFloat = value(tvOS: 400, macOS: 200)
+        let leading: CGFloat = value(tvOS: 80, macOS: 40, compactSize: 10)
+        let imageMaxWidth: CGFloat = value(tvOS: 400, macOS: 200, compactSize: 150)
     }
 }
 

@@ -7,8 +7,11 @@
 //
 
 import SwiftUI
-import PopcornKit
+import PopcornTorrent
 
+#if os(macOS)
+typealias NavigationView = NavigationStack // workaround to use NavigationStack on macOS as there are some bugs on ios/tvos with SeasonPickerButton - not working
+#endif
 
 @main
 struct PopcornTime: App {
@@ -26,30 +29,39 @@ struct PopcornTime: App {
                     #elseif os(tvOS)
                         .modifier(TopShelfLinkOpener())
                     #endif
+                        .onAppear {
+                            // bootstrap torrent session
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                PTTorrentsSession.shared()
+                            }
+                        }
                 }
             }
             .preferredColorScheme(.dark)
             #if os(iOS)
             .accentColor(.white)
             .navigationViewStyle(StackNavigationViewStyle())
+            .modifier(SecondaryScreen())
             #endif
-//            .onAppear {
-//                TraktManager.shared.syncUserData()
-//            }
         }
 //        #if os(iOS) || os(macOS)
 //        .commands(content: {
 //            OpenCommand()
 //        })
 //        #endif
-//        .windowStyle(.hiddenTitleBar)
-//        .windowToolbarStyle(.unified(showsTitle: false))
         
         #if os(macOS)
-//        Settings {
-//            SettingsView()
-//        }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unifiedCompact(showsTitle: false))
+//        .windowToolbarStyle(.expanded)
         #endif
+        
+        #if os(macOS)
+        Settings {
+            SettingsView()
+        }
+        #endif
+
     }
 
 // in order do exit app on window close

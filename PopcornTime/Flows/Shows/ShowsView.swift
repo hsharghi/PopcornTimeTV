@@ -51,7 +51,7 @@ struct ShowsView: View, MediaRatingsLoader {
         }
         #if os(macOS)
         .modifier(VisibleToolbarView(toolbarContent: { isVisible in
-            ToolbarItemGroup {
+            ToolbarItem(placement: .navigation) {
                 if isVisible {
                     filtersView
                 }
@@ -110,9 +110,6 @@ struct ShowsView: View, MediaRatingsLoader {
     @ViewBuilder
     var filtersView: some View {
         HStack(spacing: 0) {
-            #if os(iOS)
-            Image(systemName: "chevron.up.chevron.down")
-            #endif
             Picker("Shows", selection: $viewModel.currentFilter) {
                 ForEach(Popcorn.Filters.allCases, id: \.self) { item in
                     Text(item.string).tag(item)
@@ -120,8 +117,7 @@ struct ShowsView: View, MediaRatingsLoader {
             
             }
             #if os(iOS)
-            Text("Shows - Genre")
-                .padding(.horizontal, 5)
+            Text("Shows   -   Genre")
             #endif
             Picker("Genre", selection: $viewModel.currentGenre) {
                 ForEach(Popcorn.Genres.allCases, id: \.self) { item in

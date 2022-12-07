@@ -12,14 +12,34 @@ import TVVLCKit
 typealias VLCPlayerView = VLCPlayerView_tvOS
 #elseif os(iOS)
 import MobileVLCKit
-typealias VLCPlayerView = VLCPlayerView_iOS
+typealias VLCPlayerView = ExternalDisplayWrapper
 #elseif os(macOS)
 import VLCKit
-typealias VLCPlayerView = VLCPlayerView_MAC
+typealias VLCPlayerView = VLCPlayerView_MACWrapper
 #endif
 
 
 #if os(macOS)
+
+struct VLCPlayerView_MACWrapper: View {
+    var mediaplayer: VLCMediaPlayer
+    @State var disableScreenSaverToken: NSObjectProtocol?
+    
+    var body: some View {
+        VLCPlayerView_MAC(mediaplayer: mediaplayer)
+            .onAppear {
+                disableScreenSaverToken = ProcessInfo.processInfo.beginActivity(options: .idleDisplaySleepDisabled, reason: "disable screen saver")
+                NSCursor.setHiddenUntilMouseMoves(true)
+            }
+            .onDisappear {
+                if let token = disableScreenSaverToken {
+                    ProcessInfo.processInfo.endActivity(token)
+                    disableScreenSaverToken = nil
+                }
+            }
+    }
+}
+
 struct VLCPlayerView_MAC: NSViewRepresentable {
     var mediaplayer = VLCMediaPlayer()
     
@@ -28,7 +48,7 @@ struct VLCPlayerView_MAC: NSViewRepresentable {
     
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
-        fixFirstTimeInvalidSize(view: view)
+//        fixFirstTimeInvalidSize(view: view)
         return view
     }
     
@@ -59,6 +79,26 @@ struct VLCPlayerView_MAC: NSViewRepresentable {
 #endif
 
 #if os(iOS)
+/// Show videoplayer on external monitor when is connected trough usb-c port
+struct ExternalDisplayWrapper: View {
+    var mediaplayer = VLCMediaPlayer()
+    
+    var body: some View {
+        if #available(iOS 16.0, *) { // workaround to hide home indicator from bottom of the screen
+            SecondaryScreenDisplay {
+                VLCPlayerView_iOS(mediaplayer: mediaplayer)
+            }
+            .persistentSystemOverlays(.hidden)
+            .ignoresSafeArea()
+        } else {
+            SecondaryScreenDisplay {
+                VLCPlayerView_iOS(mediaplayer: mediaplayer)
+            }
+            .ignoresSafeArea()
+        }
+    }
+}
+
 struct VLCPlayerView_iOS: UIViewRepresentable {
     var mediaplayer = VLCMediaPlayer()
     

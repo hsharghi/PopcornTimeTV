@@ -48,7 +48,9 @@ struct TVButton: View {
         #endif
             .font(.system(size: theme.fontSize, weight: .medium))
             .foregroundColor((focused || configuration.isPressed || isSelected) ? .primary : .appSecondary)
+        #if !os(macOS)
             .animation(.easeOut, value: focused)
+        #endif
             .onChange(of: focused) { newValue in
                 if newValue {
                     onFocus()

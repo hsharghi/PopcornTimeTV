@@ -33,7 +33,7 @@ struct TrailerButton: View {
             }
         })
         .frame(width: theme.buttonWidth, height: theme.buttonHeight)
-        .fullScreenContent(isPresented: $showPlayer, title: viewModel.movie.title) {
+        .fullScreenContent(isPresented: $showPlayer, title: viewModel.media.title) {
             trailerVideo
         }
     }
@@ -52,6 +52,12 @@ struct TrailerButton: View {
             .onDisappear {
                 onPlayerClose()
             }
+            .overlay(alignment: .topLeading, content: {
+                if #available(iOS 16, macOS 9999, tvOS 9999, *) {
+                    closeButton
+                        .position(x:20, y:35)
+                }
+            })
             .ignoresSafeArea()
     }
     
@@ -62,15 +68,32 @@ struct TrailerButton: View {
     }
     
     func showTrailer() {
+        viewModel.error = nil
         Task {
-            viewModel.error.wrappedValue = nil
             do {
                 try await viewModel.loadTrailerUrl()
                 self.showPlayer = true
             } catch {
-                viewModel.error.wrappedValue = error
+                DispatchQueue.main.async {
+                    viewModel.error = error
+                }
             }
         }
+    }
+    
+    @ViewBuilder
+    var closeButton: some View {
+        Button {
+            withAnimation {
+                showPlayer = false
+            }
+            onPlayerClose()
+        } label: {
+            Color.clear
+                .overlay(Image("CloseiOS"))
+        }
+        .frame(width: 46, height: 46)
+//        .background(.regularMaterial)
     }
 }
 

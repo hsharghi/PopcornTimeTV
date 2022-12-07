@@ -102,6 +102,18 @@ struct DownloadView: View {
             Text("Delete Download")
         })
         
+        let playDownload = Button(action: {
+            showPlayer = true
+        }, label: {
+            Text("Play")
+        })
+        
+        let pauseDownload = Button(action: {
+            viewModel.pause()
+        }, label: {
+            Text("Pause")
+        })
+        
         switch viewModel.download.downloadStatus {
         case .finished:
             Button(action: {
@@ -111,12 +123,11 @@ struct DownloadView: View {
             })
             
             deleteDownload
-        case .downloading, .processing:
-            Button(action: {
-                viewModel.pause()
-            }, label: {
-                Text("Pause")
-            })
+        case .processing:
+            pauseDownload
+        case .downloading:
+            pauseDownload
+            playDownload
         case .paused:
             Button(action: {
                 viewModel.continueDownload()

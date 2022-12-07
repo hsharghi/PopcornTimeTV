@@ -42,6 +42,7 @@ struct WatchlistView: View, MediaPosterLoader {
                 .font(.callout)
                 .foregroundColor(.appSecondary)
                 .padding(.top, 14)
+                .padding(.leading, theme.leading)
             ScrollView(.horizontal) {
                 LazyHStack(spacing: theme.itemSpacing) {
                     ForEach(viewModel.movies, id: \.self) { movie in
@@ -58,10 +59,12 @@ struct WatchlistView: View, MediaPosterLoader {
 //                            .padding([.leading, .trailing], 10)
                     }
                     .padding(20) // allow zoom
-                }.padding(.all, 0)
+                }
+                .padding(.all, 0)
+                .padding(.leading, theme.leading)
             }
         }
-        .padding(.leading, theme.leading)
+        
     }
     
     @ViewBuilder
@@ -71,6 +74,7 @@ struct WatchlistView: View, MediaPosterLoader {
                 .font(.callout)
                 .foregroundColor(.appSecondary)
                 .padding(.top, 14)
+                .padding(.leading, theme.leading)
             ScrollView(.horizontal) {
                 LazyHStack(spacing: theme.itemSpacing) {
                     ForEach(viewModel.shows, id: \.self) { show in
@@ -87,10 +91,11 @@ struct WatchlistView: View, MediaPosterLoader {
 //                            .padding([.leading, .trailing], 10)
                     }
                     .padding(20) // allow zoom
-                }.padding(.all, 0)
+                }
+                .padding(.all, 0)
+                .padding(.leading, theme.leading)
             }
         }
-        .padding(.leading, theme.leading)
     }
     
     @ViewBuilder
@@ -113,8 +118,8 @@ struct WatchlistView: View, MediaPosterLoader {
 extension WatchlistView {
     struct Theme {
         let itemWidth: CGFloat = value(tvOS: 240, macOS: 160)
-        let itemSpacing: CGFloat = value(tvOS: 40, macOS: 20)
-        let leading: CGFloat = value(tvOS: 50, macOS: 50)
+        let itemSpacing: CGFloat = value(tvOS: 40, macOS: 20, compactSize: 10)
+        let leading: CGFloat = value(tvOS: 50, macOS: 50, compactSize: 10)
     }
 }
 

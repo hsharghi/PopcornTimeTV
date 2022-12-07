@@ -19,17 +19,15 @@ class LoadExternalTorrentViewModel: ObservableObject {
         var torrent: Torrent
         var movie: Movie
     }
+    @Published var displayUrl = ""
     
     init() {
         configureServer()
     }
     
-    var displayUrl: String {
-        return "\n" + (webserver.serverURL?.absoluteString ?? "") + "\n"
-    }
-    
     func startServer() {
         webserver.start(withPort: 54320, bonjourName: "popcorn")
+        displayUrl = webserver.serverURL?.absoluteString ?? ""
     }
     
     func stopServer() {
