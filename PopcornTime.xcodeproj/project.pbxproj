@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F172B4A2941059A0035FF67 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2349FE9F283AD72E00F0138C /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23025D93267E71BA00229559 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23025D92267E71BA00229559 /* MovieView.swift */; };
 		23025D95267EEC8000229559 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D990E321DC4F028005CDE34 /* Images.xcassets */; };
 		2304530B26B541900050BCB8 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304530A26B541900050BCB8 /* SettingsViewModel.swift */; };
@@ -22,8 +23,7 @@
 		2304532726BB30C60050BCB8 /* ShowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2343A7682688AEFC00B824E7 /* ShowsViewModel.swift */; };
 		230C082526BD3D3C00989E7F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D990E321DC4F028005CDE34 /* Images.xcassets */; };
 		230C65FF284B207F00CA59F8 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2349FE9F283AD72E00F0138C /* VLCKit.xcframework */; };
-		230C6600284B207F00CA59F8 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2349FE9F283AD72E00F0138C /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		23166C012694EE6E00D87AD0 /* TopShelf.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 23E4976626947E1300175DEE /* TopShelf.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		23166C012694EE6E00D87AD0 /* TopShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 23E4976626947E1300175DEE /* TopShelf.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		232BB5242694562C005448AE /* PopcornTorrent in Frameworks */ = {isa = PBXBuildFile; productRef = 232BB5232694562C005448AE /* PopcornTorrent */; };
 		232BB527269456BF005448AE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 232BB526269456BF005448AE /* Kingfisher */; };
 		23313B00267E374F00774A85 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23313AFF267E374F00774A85 /* App.swift */; };
@@ -371,7 +371,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				230C6600284B207F00CA59F8 /* VLCKit.xcframework in Embed Frameworks */,
+				0F172B4A2941059A0035FF67 /* VLCKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,15 +386,15 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		23166C042694EE6E00D87AD0 /* Embed App Extensions */ = {
+		23166C042694EE6E00D87AD0 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				23166C012694EE6E00D87AD0 /* TopShelf.appex in Embed App Extensions */,
+				23166C012694EE6E00D87AD0 /* TopShelf.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		23313B52267E4A3D00774A85 /* Embed Frameworks */ = {
@@ -982,7 +982,7 @@
 				23313AFA267E374F00774A85 /* Frameworks */,
 				23313AFB267E374F00774A85 /* Resources */,
 				23313B52267E4A3D00774A85 /* Embed Frameworks */,
-				23166C042694EE6E00D87AD0 /* Embed App Extensions */,
+				23166C042694EE6E00D87AD0 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -1076,7 +1076,7 @@
 			attributes = {
 				CLASSPREFIX = PCT;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = PopcornTime;
 				TargetAttributes = {
 					23313AFC267E374F00774A85 = {
@@ -1558,10 +1558,10 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_ASSET_PATHS = "PopcornTime/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1606,10 +1606,10 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_ASSET_PATHS = "PopcornTime/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PopcornTime/Info.plist;
@@ -1644,9 +1644,10 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1689,9 +1690,10 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1727,11 +1729,12 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1776,11 +1779,12 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 923H768GFC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1921,6 +1925,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = appletvos;
@@ -1972,6 +1977,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = appletvos;
 				SWIFT_COMPILATION_MODE = wholemodule;

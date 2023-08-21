@@ -13,7 +13,7 @@ PopcornTimeTV is an Apple TV, iPhone, iPad and Mac application to torrent movies
 
 Build instructions:
 
-``` bash
+```bash
 $ git clone https://github.com/alextud/PopcornTimeTV.git
 $ cd PopcornTimeTV/
 $ open PopcornTime.xcodeproj
@@ -42,7 +42,6 @@ Here were some of the gotchas:
 It was tricky to wirelessly connect to my Apple TV, the key was to go into Settings > Remotes and Devices > Remote App and Devices on the Apple TV first, that allowed Xcode to find it
 There was a lot of trial and error creating the device and profile up on developer.apple.com (you will need the UUID of your Apple TV, which you can get from Xcode when you have connected to it)
 
-
 To change VLCKit version, edit VLCKit/get-vlc-frameworks.sh file
 
 ## License
@@ -57,10 +56,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 Note: some dependencies are external libraries, which might be covered by a different license compatible with the GPLv3. They are mentioned in [NOTICE.md](https://github.com/PopcornTimeTV/PopcornTimeTV/blob/master/NOTICE.md).
 
-
 **This project and the distribution of this project is not illegal, nor does it violate _any_ DMCA laws. The use of this project, however, may be illegal in your area. Check your local laws and regulations regarding the use of torrents to watch potentially copyrighted content. The maintainers of this project do not condone the use of this project for anything illegal, in any state, region, country, or planet. _Please use at your own risk_.**
 
-***
-
+---
 
 Copyright (c) 2017 Popcorn Time Foundation - Released under the [GPL V3 license](https://github.com/PopcornTimeTV/PopcornTimeTV/LICENSE.md).
