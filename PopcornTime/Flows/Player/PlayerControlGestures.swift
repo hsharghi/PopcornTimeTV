@@ -54,17 +54,19 @@ extension VLCPlayerView {
                     }
                     viewModel.resetIdleTimer()
                 case .left:
-                    if viewModel.showControls {
-                        viewModel.rewind()
-                        viewModel.progress.hint = .rewind
-                        viewModel.resetIdleTimer()
+                    withAnimation {
+                        viewModel.showControls = true
                     }
+                    viewModel.rewind()
+                    viewModel.progress.hint = .rewind
+                    viewModel.resetIdleTimer()
                 case .right:
-                    if viewModel.showControls {
-                        viewModel.fastForward()
-                        viewModel.progress.hint = .fastForward
-                        viewModel.resetIdleTimer()
+                    withAnimation {
+                        viewModel.showControls = true
                     }
+                    viewModel.fastForward()
+                    viewModel.progress.hint = .fastForward
+                    viewModel.resetIdleTimer()
                 @unknown default:
                     break
                 }

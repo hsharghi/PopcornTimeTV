@@ -50,7 +50,7 @@ class ShowDetailsViewModel: ObservableObject {
         
         if show.ratings == nil {
             Task { @MainActor in
-                let info = try? await OMDbApi.shared.loadCachedInfo(imdbId: show.id)
+                let info = try? await OMDbApi.shared.loadInfo(imdbId: show.id)
                 if let info = info {
                     self.show.ratings = info.transform()
                 }

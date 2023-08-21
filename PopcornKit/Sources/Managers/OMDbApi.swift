@@ -13,23 +13,11 @@ open class OMDbApi {
     public static let shared = OMDbApi()
     
     
-    func loadInfo(imdbId: String) async throws -> OMDbMedia {
+    public func loadInfo(imdbId: String) async throws -> OMDbMedia {
         var params = OMDb.defaultParameters
         params[OMDb.info] = imdbId
         
         return try await client.request(.get, path: "", parameters: params).responseDecode()
-    }
-    
-    open func loadCachedInfo(imdbId: String) async throws -> OMDbMedia {
-        let key = "ombd/\(imdbId)"
-        if let data = UserDefaults.standard.data(forKey: key) {
-           return try JSONDecoder().decode(OMDbMedia.self, from: data)
-        } else {
-            let media = try await loadInfo(imdbId: imdbId)
-            let data = try? JSONEncoder().encode(media)
-            UserDefaults.standard.setValue(data, forKey: key)
-            return media
-        }
     }
 }
 

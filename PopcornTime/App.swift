@@ -15,27 +15,23 @@ typealias NavigationView = NavigationStack // workaround to use NavigationStack 
 
 @main
 struct PopcornTime: App {
-    @State var tosAccepted = Session.tosAccepted
     
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                if !tosAccepted {
-                    TermsOfServiceView(tosAccepted: $tosAccepted)
-                } else {
-                    TabBarView()
-                    #if os(iOS) || os(macOS)
-                        .modifier(MagnetTorrentLinkOpener())
-                    #elseif os(tvOS)
-                        .modifier(TopShelfLinkOpener())
-                    #endif
-                        .onAppear {
-                            // bootstrap torrent session
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                PTTorrentsSession.shared()
-                            }
+                TabBarView()
+                    .modifier(AcceptTermsOfService())
+                #if os(iOS) || os(macOS)
+                    .modifier(MagnetTorrentLinkOpener())
+                #elseif os(tvOS)
+                    .modifier(TopShelfLinkOpener())
+                #endif
+                    .onAppear {
+                        // bootstrap torrent session
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            PTTorrentsSession.shared()
                         }
-                }
+                    }
             }
             .preferredColorScheme(.dark)
             #if os(iOS)

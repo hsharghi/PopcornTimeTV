@@ -8,7 +8,7 @@
 import Foundation
 
 extension JSONDecoder {
-    open func decode<T>(_ type: T.Type, from data: Data, keyPath: String, separator: Character = ".") throws -> T where T : Decodable {
+    public func decode<T>(_ type: T.Type, from data: Data, keyPath: String, separator: Character = ".") throws -> T where T : Decodable {
         self.userInfo[JSONDecoder.keyPaths] = keyPath.split(separator: separator).map({ String($0) })
         return try decode(ProxyModel<T>.self, from: data).object
     }

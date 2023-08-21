@@ -251,6 +251,7 @@ class PlayerViewModel: NSObject, ObservableObject {
     
     func toggleControlsVisible() {
         showControls.toggle()
+        progress.hint = .none
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             self.resetIdleTimer()
         }

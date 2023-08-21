@@ -51,8 +51,9 @@ class PlayerAudioModel {
         })
         
         #if os(iOS) || os(tvOS)
-//        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [.allowBluetoothA2DP, .allowAirPlay,])
-//        try? AVAudioSession.sharedInstance().setActive(true, options: [])
+        try? AVAudioSession.sharedInstance().setActive(false)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+        try? AVAudioSession.sharedInstance().setActive(true)
         didSelectEqualizerProfile(.fullDynamicRange)
         #endif
     }

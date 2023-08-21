@@ -100,17 +100,25 @@ public struct OpenSubtitles {
     static let defaultHeaders = ["User-Agent": OpenSubtitles.userAgent]
 }
 
+//public struct OMDb {
+//    static let apiKey = "19f23577"
+//    static let base = "http://www.omdbapi.com"
+//    static let info = "i"
+//
+//    static let defaultParameters = ["apikey": OMDb.apiKey]
+//}
+
+// cloudflare cached version of above
 public struct OMDb {
-    static let apiKey = "19f23577"
-    static let base = "http://www.omdbapi.com"
+    static let base = "http://reviews.randomrush.site"
     static let info = "i"
     
-    static let defaultParameters = ["apikey": OMDb.apiKey]
+    static let defaultParameters: [String: String] = [:]
 }
 
 
 public struct Popcorn {
-    static let base = "https://popcorn-time.ga"
+    static let base = "https://shows.cf"
     static let movies = "/movies"
     static let movie = "/movie"
     static let shows = "/shows"

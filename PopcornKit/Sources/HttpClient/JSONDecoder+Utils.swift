@@ -46,14 +46,14 @@ extension DecodingError {
 
 extension JSONDecoder {
     
-    open func decode<T>(_ type: T.Type, from data: Data, keyPath: String, separator: Character = ".") throws -> T where T : Decodable {
+    public func decode<T>(_ type: T.Type, from data: Data, keyPath: String, separator: Character = ".") throws -> T where T : Decodable {
         self.userInfo[JSONDecoder.keyPaths] = keyPath.split(separator: separator).map({ String($0) })
         return try decode(ProxyModel<T>.self, from: data).object
     }
     
     static let keyPaths: CodingUserInfoKey = CodingUserInfoKey(rawValue: "keyPath")!
     
-    open func decode<T>(_ type: T.Type, from dict: [String:Any], keyPath: String? = nil, separator: Character = ".") throws -> T where T : Decodable {
+    public func decode<T>(_ type: T.Type, from dict: [String:Any], keyPath: String? = nil, separator: Character = ".") throws -> T where T : Decodable {
         let data = try JSONSerialization.data(withJSONObject: dict)
         if let keyPath = keyPath {
             return try self.decode(type, from: data, keyPath: keyPath, separator: separator)

@@ -75,6 +75,18 @@ struct TermsOfServiceView: View {
         """
 }
 
+struct AcceptTermsOfService: ViewModifier {
+    @State var tosAccepted = Session.tosAccepted
+    
+    func body(content: Content) -> some View {
+        if tosAccepted {
+            content
+        } else {
+            TermsOfServiceView(tosAccepted: $tosAccepted)
+        }
+    }
+}
+
 struct TermsOfServiceView_Previews: PreviewProvider {
     static var previews: some View {
         TermsOfServiceView(tosAccepted: .constant(false))

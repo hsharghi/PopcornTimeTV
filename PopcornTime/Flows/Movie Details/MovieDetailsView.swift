@@ -129,8 +129,9 @@ struct MovieDetailsView: View, MediaPosterLoader {
             }
             
             let directors = movie.crew.filter({$0.roleType == .director}).prefix(5).compactMap{String($0.name)}
-            if directors.count > 0,
-               let isSingular = directors.count == 1 {
+            let isSingular = directors.count == 1
+            if directors.count > 0
+                {
                 sectionText(title: (isSingular ? "Director".localized.localizedUppercase : "Directors".localized.localizedUppercase), description: directors)
             }
             

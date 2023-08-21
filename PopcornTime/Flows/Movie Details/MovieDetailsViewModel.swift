@@ -41,7 +41,7 @@ class MovieDetailsViewModel: ObservableObject, CharacterHeadshotLoader, MediaRat
         
         if movie.ratings == nil {
             Task { @MainActor in
-                let info = try? await OMDbApi.shared.loadCachedInfo(imdbId: movie.id)
+                let info = try? await OMDbApi.shared.loadInfo(imdbId: movie.id)
                 if let info = info {
                     self.movie.ratings = info.transform()
                 }
