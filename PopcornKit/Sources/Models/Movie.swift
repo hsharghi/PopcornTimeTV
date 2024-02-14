@@ -71,7 +71,7 @@ public struct Movie: Media, Equatable, Identifiable {
         if amazonUrl {
             return largeCoverImage?.replacingOccurrences(of: amazonUrl ? "SX1000" : "w780", with: amazonUrl ? "SX300" : "w342")
         }
-        return "http://img.omdbapi.com/?i=\(id)&apikey=367f918b"
+        return "http://img.omdbapi.com/?i=\(id)&apikey=367f918b&h=600"
     }
     
     /// If poster image is available, it is returned with size 975*650.
