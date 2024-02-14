@@ -13,7 +13,6 @@
 		0FC4A3442B7CE49800DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A3452B7CE4CE00DE4D76 /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A3462B7CE4D200DE4D76 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */; };
-		0FC4A34A2B7CE69000DE4D76 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; };
 		0FC4A34B2B7CE69700DE4D76 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A34C2B7CE69C00DE4D76 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; };
 		23025D93267E71BA00229559 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23025D92267E71BA00229559 /* MovieView.swift */; };
@@ -615,7 +614,6 @@
 			files = (
 				23E8172F26950B60003258CC /* PopcornKit in Frameworks */,
 				2364708B2694B76E008743CB /* ObjectMapper in Frameworks */,
-				0FC4A34A2B7CE69000DE4D76 /* VLCKit.xcframework in Frameworks */,
 				0FC4A33A2B7CE42400DE4D76 /* TVVLCKit.xcframework in Frameworks */,
 				23E4976726947E1300175DEE /* TVServices.framework in Frameworks */,
 			);
