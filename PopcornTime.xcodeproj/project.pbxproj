@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0FC4A33A2B7CE42400DE4D76 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */; };
-		0FC4A33B2B7CE42E00DE4D76 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */; };
-		0FC4A3432B7CE48D00DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0FC4A3442B7CE49800DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0FC4A3452B7CE4CE00DE4D76 /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0FC4A3462B7CE4D200DE4D76 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */; };
 		0FC4A34B2B7CE69700DE4D76 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A34C2B7CE69C00DE4D76 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; };
+		0FC4A34E2B7CF07100DE4D76 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */; };
+		0FC4A3512B7CF08D00DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0FC4A3522B7CF09300DE4D76 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */; };
+		0FC4A3532B7CF09F00DE4D76 /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A34F2B7CF07C00DE4D76 /* MobileVLCKit.xcframework */; };
 		23025D93267E71BA00229559 /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23025D92267E71BA00229559 /* MovieView.swift */; };
 		23025D95267EEC8000229559 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D990E321DC4F028005CDE34 /* Images.xcassets */; };
 		2304530B26B541900050BCB8 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304530A26B541900050BCB8 /* SettingsViewModel.swift */; };
@@ -384,7 +382,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0FC4A3442B7CE49800DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,7 +403,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0FC4A3432B7CE48D00DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */,
+				0FC4A3512B7CF08D00DE4D76 /* TVVLCKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -417,7 +414,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0FC4A3452B7CE4CE00DE4D76 /* MobileVLCKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,9 +422,9 @@
 
 /* Begin PBXFileReference section */
 		002682111CD0B76200F51D31 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = System/Library/Frameworks/TVServices.framework; sourceTree = SDKROOT; };
-		0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = "VLCKit/VLCKit/TVVLCKit-binary/TVVLCKit.xcframework"; sourceTree = "<group>"; };
-		0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = "VLCKit/VLCKit/MobileVLCKit-binary/MobileVLCKit.xcframework"; sourceTree = "<group>"; };
 		0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = "VLCKit/VLCKit - binary package/VLCKit.xcframework"; sourceTree = "<group>"; };
+		0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = "VLCKit/TVVLCKit-binary/TVVLCKit.xcframework"; sourceTree = "<group>"; };
+		0FC4A34F2B7CF07C00DE4D76 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = "VLCKit/MobileVLCKit-binary/MobileVLCKit.xcframework"; sourceTree = "<group>"; };
 		23025D92267E71BA00229559 /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
 		2304530A26B541900050BCB8 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		23313AFD267E374F00774A85 /* PopcornTime (tvOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PopcornTime (tvOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -578,9 +574,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FC4A3522B7CF09300DE4D76 /* TVVLCKit.xcframework in Frameworks */,
 				23507DC8269483310098CC12 /* ObjectMapper in Frameworks */,
 				23E8172D26950B56003258CC /* PopcornKit in Frameworks */,
-				0FC4A33B2B7CE42E00DE4D76 /* TVVLCKit.xcframework in Frameworks */,
 				232BB527269456BF005448AE /* Kingfisher in Frameworks */,
 				232BB5242694562C005448AE /* PopcornTorrent in Frameworks */,
 			);
@@ -590,7 +586,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FC4A3462B7CE4D200DE4D76 /* MobileVLCKit.xcframework in Frameworks */,
+				0FC4A3532B7CF09F00DE4D76 /* MobileVLCKit.xcframework in Frameworks */,
 				23A2BDB626BEDB2C004B864E /* Kingfisher in Frameworks */,
 				23A2BDB426BEDA5F004B864E /* PopcornTorrent in Frameworks */,
 				23A2BDB226BEDA5F004B864E /* PopcornKit in Frameworks */,
@@ -614,7 +610,7 @@
 			files = (
 				23E8172F26950B60003258CC /* PopcornKit in Frameworks */,
 				2364708B2694B76E008743CB /* ObjectMapper in Frameworks */,
-				0FC4A33A2B7CE42400DE4D76 /* TVVLCKit.xcframework in Frameworks */,
+				0FC4A34E2B7CF07100DE4D76 /* TVVLCKit.xcframework in Frameworks */,
 				23E4976726947E1300175DEE /* TVServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -966,9 +962,9 @@
 				23A7272928C7C98E00B25354 /* SystemConfiguration.framework */,
 				23A7272B28C7C9FA00B25354 /* SystemConfiguration.framework */,
 				23A7272D28C7CA1600B25354 /* SystemConfiguration.framework */,
+				0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */,
 				23A7272528C7C93A00B25354 /* Network.framework */,
-				0FC4A33C2B7CE44A00DE4D76 /* MobileVLCKit.xcframework */,
-				0FC4A3392B7CE42400DE4D76 /* TVVLCKit.xcframework */,
+				0FC4A34F2B7CF07C00DE4D76 /* MobileVLCKit.xcframework */,
 				0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */,
 				002682111CD0B76200F51D31 /* TVServices.framework */,
 			);
