@@ -118,7 +118,7 @@ public struct OMDb {
 
 
 public struct Popcorn {
-    static let base = "https://shows.cf"
+    static let base = "https://uxert.link"
     static let movies = "/movies"
     static let movie = "/movie"
     static let shows = "/shows"
