@@ -8,19 +8,19 @@
 
 import SwiftUI
 
-struct NavigationLinkWrapper<Content: View, Destination: View>: View {
-    @Binding var isActive: Bool
-    var content: Content
-    var destination: () -> Destination
-    
-    var body: some View {
-        ZStack {
-            NavigationLink(isActive: $isActive, destination: destination, label: { EmptyView() })
-                .hidden()
-            content
-        }
-    }
-}
+//struct NavigationLinkWrapper<Content: View, Destination: View>: View {
+//    @Binding var isActive: Bool
+//    var content: Content
+//    var destination: () -> Destination
+//    
+//    var body: some View {
+//        ZStack {
+//            NavigationLink(isActive: $isActive, destination: destination, label: { EmptyView() })
+//                .hidden()
+//            content
+//        }
+//    }
+//}
 
 extension View {
     /// show content as fullscreen Cover on iOS / tvOS or as a separate window on Mac

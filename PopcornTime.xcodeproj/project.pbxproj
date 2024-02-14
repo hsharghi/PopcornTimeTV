@@ -2052,7 +2052,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/alextud/PopcornTorrent";
 			requirement = {
-				branch = v2_2;
+				branch = v2_3;
 				kind = branch;
 			};
 		};

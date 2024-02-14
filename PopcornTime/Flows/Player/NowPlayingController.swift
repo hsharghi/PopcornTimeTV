@@ -96,8 +96,7 @@ class NowPlayingController {
                           MPMediaItemPropertyMediaType: MPMediaType.movie.rawValue]
         
         if let image = media.mediumCoverImage ?? media.mediumBackgroundImage, let imageUrl = URL(string: image) {
-            let imageResouce = ImageResource(downloadURL: imageUrl)
-            KingfisherManager.shared.retrieveImage(with: imageResouce) { result in
+            KingfisherManager.shared.retrieveImage(with: .network(imageUrl)) { result in
                 guard let image = result.value?.image else {
                     return
                 }
