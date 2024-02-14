@@ -29,6 +29,7 @@ struct ShowView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
+                .frame(width: 250, height: 376, alignment: .center)
                 .aspectRatio(contentMode: .fit)
                 .overlay(alignment: theme.ratingAlignment) {
                     if focused || longPress {
