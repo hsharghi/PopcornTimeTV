@@ -8,6 +8,7 @@
 
 import SwiftUI
 import PopcornTorrent
+import Kingfisher
 
 #if os(macOS)
 typealias NavigationView = NavigationStack // workaround to use NavigationStack on macOS as there are some bugs on ios/tvos with SeasonPickerButton - not working
@@ -27,6 +28,7 @@ struct PopcornTime: App {
                     .modifier(TopShelfLinkOpener())
                 #endif
                     .onAppear {
+                        KingfisherManager.shared.downloader.downloadTimeout = 600
                         // bootstrap torrent session
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                             PTTorrentsSession.shared()

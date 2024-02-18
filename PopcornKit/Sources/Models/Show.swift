@@ -75,19 +75,13 @@ public struct Show: Media, Equatable, Identifiable {
     /// If poster image is available, it is returned with size 450*300.
     public var smallCoverImage: String? {
         let amazonUrl = largeCoverImage?.isAmazonUrl ?? false
-        if amazonUrl {
-            return largeCoverImage?.replacingOccurrences(of: amazonUrl ? "SX1000" : "w780", with: amazonUrl ? "SX300" : "w342")
-        }
-        return "http://img.omdbapi.com/?i=\(id)&apikey=367f918b&h=600"
+        return largeCoverImage?.replacingOccurrences(of: amazonUrl ? "SX1000" : "w780", with: amazonUrl ? "SX300" : "w342")
     }
     
     /// If poster image is available, it is returned with size 975*650.
     public var mediumCoverImage: String? {
         let amazonUrl = largeCoverImage?.isAmazonUrl ?? false
-        if amazonUrl {
-            return largeCoverImage?.replacingOccurrences(of: amazonUrl ? "SX1000" : "w780", with: amazonUrl ? "SX650" : "w500")
-        }
-        return "http://img.omdbapi.com/?i=\(id)&apikey=367f918b&h=800"
+        return largeCoverImage?.replacingOccurrences(of: amazonUrl ? "SX1000" : "w780", with: amazonUrl ? "SX650" : "w500")
     }
     
     /// If poster image is available, it is returned with size 1500*1000
@@ -141,8 +135,8 @@ public struct Show: Media, Equatable, Identifiable {
             self.tvdbId = try map.value("tvdb_id")
             self.year = try map.value("year")
             self.rating = try map.value("rating.percentage")
-            self.largeCoverImage = try? map.value("images.poster"); largeCoverImage = largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000").replacingOccurrences(of: "http://", with: "https://")
-            self.largeBackgroundImage = try? map.value("images.fanart"); largeBackgroundImage = largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920").replacingOccurrences(of: "http://", with: "https://")
+            self.largeCoverImage = try? map.value("images.poster"); largeCoverImage = largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000").replacingOccurrences(of: "http://", with: "https://").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+            self.largeBackgroundImage = try? map.value("images.fanart"); largeBackgroundImage = largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920").replacingOccurrences(of: "http://", with: "https://").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
             self.slug = try map.value("slug")
             self.airDay = try? map.value("air_day")
             self.airTime = try? map.value("air_time")

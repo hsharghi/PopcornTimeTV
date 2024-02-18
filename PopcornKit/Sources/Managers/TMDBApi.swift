@@ -27,9 +27,11 @@ open class TMDBApi {
             let responseDict = JSON(response)
             if let poster = responseDict["posters"].first?.1["file_path"].string {
                 image = "https://image.tmdb.org/t/p/w780" + poster
+                image = image?.replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
             }
             if let backdrops = responseDict["backdrops"].first?.1["file_path"].string {
                 backdrop = "https://image.tmdb.org/t/p/w1280" + backdrops
+                backdrop = backdrop?.replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
             }
         }
         return (backdrop: backdrop ?? "", poster: image ?? "")
@@ -48,6 +50,8 @@ open class TMDBApi {
         var image: String?
         if let poster = responseDict["posters"].first?.1["file_path"].string {
             image = "https://image.tmdb.org/t/p/w500" + poster
+            image = image?.replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+
         }
 
         return image ?? ""
@@ -67,6 +71,7 @@ open class TMDBApi {
         var image: String?
         if let screenshot = responseDict["stills"].first?.1["file_path"].string {
             image = "https://image.tmdb.org/t/p/w1280" + screenshot
+            image = image?.replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
         }
         return image ?? ""
     }
@@ -84,6 +89,7 @@ open class TMDBApi {
         var image: String?
         if let headshot = responseDict["profiles"].first?.1["file_path"].string {
             image = "https://image.tmdb.org/t/p/w780" + headshot
+            image = image?.replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
         }
         return image ?? ""
     }
