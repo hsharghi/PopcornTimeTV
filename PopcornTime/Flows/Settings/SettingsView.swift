@@ -40,6 +40,7 @@ struct SettingsView: View {
             #endif
             List() {
                 Section(header: sectionHeader("Player")) {
+                    useDirectLinksButton
                     removeCacheOnPlayerExitButton
                     qualityAlertButton
                     if viewModel.hasCellularNetwork {
@@ -93,6 +94,15 @@ struct SettingsView: View {
         button(text: "Clear Cache Upon Exit", value: clearCacheText) {
             Session.removeCacheOnPlayerExit.toggle()
             clearCacheText = Session.removeCacheOnPlayerExit ? "On".localized : "Off".localized
+        }
+    }
+    
+    @State var useDirectLinksText = Session.useDirectLinks ? "On".localized : "Off".localized
+    @ViewBuilder
+    var useDirectLinksButton: some View {
+        button(text: "Use Direct Links", value: useDirectLinksText) {
+            Session.useDirectLinks.toggle()
+            useDirectLinksText = Session.useDirectLinks ? "On".localized : "Off".localized
         }
     }
     

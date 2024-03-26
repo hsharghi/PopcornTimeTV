@@ -422,6 +422,7 @@
 
 /* Begin PBXFileReference section */
 		002682111CD0B76200F51D31 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = System/Library/Frameworks/TVServices.framework; sourceTree = SDKROOT; };
+		0F0589292BB223F90044CB57 /* SelectDirectLinkQualityButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDirectLinkQualityButton.swift; sourceTree = "<group>"; };
 		0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = "VLCKit/VLCKit - binary package/VLCKit.xcframework"; sourceTree = "<group>"; };
 		0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = "VLCKit/TVVLCKit-binary/TVVLCKit.xcframework"; sourceTree = "<group>"; };
 		0FC4A34F2B7CF07C00DE4D76 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = "VLCKit/MobileVLCKit-binary/MobileVLCKit.xcframework"; sourceTree = "<group>"; };
@@ -754,6 +755,7 @@
 				23446AC5267FAD000049CC72 /* PreloadTorrentViewModel.swift */,
 				23B0A01526B9818100844309 /* TorrentPlayerView.swift */,
 				2391BE7E26847B9800576CAD /* SelectTorrentQualityButton.swift */,
+				0F0589292BB223F90044CB57 /* SelectDirectLinkQualityButton.swift */,
 				237F28692693503D00FE036C /* ActorsCrewView.swift */,
 				2353D82426FF46AE00C71C09 /* RatingsView.swift */,
 				2353D82826FF47A800C71C09 /* RatingsViewModel.swift */,

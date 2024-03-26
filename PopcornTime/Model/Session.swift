@@ -35,4 +35,7 @@ enum Session {
     
     @UserDefault(key: "lastVersionCheckPerformedOnDate", defaultValue: nil)
     static var lastVersionCheckPerformedOnDate: Date?
+
+    @UserDefault(key: "useDirectLinks", defaultValue: false)
+    static var useDirectLinks: Bool
 }
