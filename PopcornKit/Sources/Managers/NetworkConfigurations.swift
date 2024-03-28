@@ -204,6 +204,6 @@ public struct Popcorn {
 
 
 public struct Almas {
-    static let base = "https://filmgirbot.site/?showitem="
+    static let base = "https://filmgirbot.site"
     
 }

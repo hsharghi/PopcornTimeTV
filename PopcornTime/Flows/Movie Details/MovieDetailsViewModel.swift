@@ -57,9 +57,11 @@ class MovieDetailsViewModel: ObservableObject, CharacterHeadshotLoader, MediaRat
                 var movie = try await PopcornKit.getMovieInfo(movie.id)
                 movie.ratings = self.movie.ratings
                 movie.largeBackgroundImage = self.movie.largeBackgroundImage ?? movie.largeBackgroundImage //keep last background
+                if Session.useDirectLinks {
+                    movie.directDownloadLinks = try? await AlmasApi.shared.getMovieLinks(imdbUrl: movie.imdbUrl)
+                }
                 self.movie = movie
                 self.downloadModel = DownloadButtonViewModel(media: movie)
-                
                 let persons = (try? await people) ?? (actors: [], crew: [])
                 self.related = (try? await related) ?? []
                 self.persons = persons.actors + persons.crew

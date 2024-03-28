@@ -14,7 +14,7 @@ import Network
 struct SelectDirectLinkQualityButton<Label>: View where Label : View {
     var links: [DownloadLink]
     var media: Media
-    var action: (Torrent) -> Void
+    var action: (DownloadLink) -> Void
     @ViewBuilder var label: () -> Label
     
     struct AlertType: Identifiable {
@@ -95,14 +95,12 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
 
     @ViewBuilder
     var chooseLinksButtons: some View {
-        ForEach(links.sorted(by: >)) { var link: DownloadLink in
+        ForEach(links.sorted(by: >)) { link in
             Button {
                 action(link)
             } label: {
                 #if os(iOS) || os(tvOS)
-                Text(link.title) +
-                Text(link.encoder) +
-                Text(link.size)
+                Text("\(link.title) | \(link.encoder) | \(link.size)")
                 #elseif os(macOS)
                 Text(link.title)
                 Text(link.size)
@@ -117,9 +115,9 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
     }
 }
 
-struct SelectTorrentQualityAction_Previews: PreviewProvider {
+struct SelectDirectLinkQualityAction_Previews: PreviewProvider {
     static var previews: some View {
-        SelectDirectLinkQualityButton(links: DownloadLink.movieLinks, action: { link in
+        SelectDirectLinkQualityButton(links: DownloadLink.movieLinks, media: Movie.dummy(), action: { link in
             print("selected: ", link)
         }, label: {
             Text("Play")

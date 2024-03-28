@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F738B202BB2E93D0080F230 /* SelectDirectLinkQualityButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0589292BB223F90044CB57 /* SelectDirectLinkQualityButton.swift */; };
 		0FC4A34B2B7CE69700DE4D76 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A34C2B7CE69C00DE4D76 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; };
 		0FC4A34E2B7CF07100DE4D76 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */; };
@@ -1250,6 +1251,7 @@
 				2353D82926FF47A800C71C09 /* RatingsViewModel.swift in Sources */,
 				23313B1A267E3A9200774A85 /* LeftSidePanelView.swift in Sources */,
 				23313B3C267E3CA800774A85 /* TermsOfServiceView.swift in Sources */,
+				0F738B202BB2E93D0080F230 /* SelectDirectLinkQualityButton.swift in Sources */,
 				23313B4B267E409700774A85 /* Result.swift in Sources */,
 				2388FD642691EC1900B51201 /* ShowDetailsViewModel.swift in Sources */,
 				23B24D7E26CA963E00B8CD84 /* FullScreenContent.swift in Sources */,

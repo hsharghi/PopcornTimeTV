@@ -24,6 +24,7 @@ public protocol Media: Mappable {
     
     /// Will be empty if Media is Show.
     var torrents: [Torrent] { get set }
+    var directLinks: [DownloadLink] { get set }
     
     /// Will return `false` if Media is Show.
     var isWatched: Bool { get set }
@@ -41,7 +42,8 @@ public protocol Media: Mappable {
 extension Media {
     public var subtitles: Dictionary<String, [Subtitle]> { get { return [:] } set {} }
     public var torrents: [Torrent] { get { return [] } set {} }
-    
+    public var directLinks: [DownloadLink] { get { return [] } set {} }
+
     public var isWatched: Bool { get { return false } set {} }
     
     public var isAddedToWatchlist: Bool { get { return false } set {} }

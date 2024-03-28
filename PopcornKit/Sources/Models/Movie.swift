@@ -40,6 +40,8 @@ public struct Movie: Media, Equatable, Identifiable {
     /// The trailer url of the movie. Will be `nil` if a trailer is not provided by the api.
     public var trailer: String?
     
+    public var directDownloadLinks: [DownloadLink]?
+    
     /// The youtube code (part of the url after `?v=`) of the trailer. Will be `nil` if trailer url is `nil`.
     public var trailerCode: String? {
         if let trailer = trailer { return trailer.slice(from: "?v=", to: "") }

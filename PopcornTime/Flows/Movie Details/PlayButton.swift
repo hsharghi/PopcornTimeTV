@@ -11,6 +11,8 @@ import PopcornKit
 import Combine
 
 struct PlayButton: View {
+    @Environment(\.openURL) private var openURL
+
     let theme = Theme()
     
     var media: Media
@@ -22,19 +24,42 @@ struct PlayButton: View {
     }
     
     var body: some View {
-        SelectTorrentQualityButton(media: media, action: { torrent in
-            self.showTorrent = PlayTorrent(torrent: torrent)
-        }, label: {
-            VStack {
-                VisualEffectBlur() {
-                    Image("Play")
+        
+        if Session.useDirectLinks {
+            let links = (media as? Movie)?.directDownloadLinks ?? []
+            SelectDirectLinkQualityButton(links: links, media: media) { downloadLink in
+                print(downloadLink.link)
+                if let encodedUrl = downloadLink.encodedUrl {
+                    let url = URL(string: "infuse://x-callback-url/play?url=\(encodedUrl)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+                    openURL(url)
                 }
-                Text("Play")
+            } label: {
+                VStack {
+                    VisualEffectBlur() {
+                        Image("Play")
+                    }
+                    Text("Play")
+                }
             }
-        })
-        .frame(width: theme.buttonWidth, height: theme.buttonHeight)
-        .fullScreenContent(item: $showTorrent, title: media.title) { item in
-            TorrentPlayerView(torrent: item.torrent, media: media)
+            .frame(width: theme.buttonWidth, height: theme.buttonHeight)
+            .fullScreenContent(item: $showTorrent, title: media.title) { item in
+                TorrentPlayerView(torrent: item.torrent, media: media)
+            }
+        } else {
+            SelectTorrentQualityButton(media: media, action: { torrent in
+                self.showTorrent = PlayTorrent(torrent: torrent)
+            }, label: {
+                VStack {
+                    VisualEffectBlur() {
+                        Image("Play")
+                    }
+                    Text("Play")
+                }
+            })
+            .frame(width: theme.buttonWidth, height: theme.buttonHeight)
+            .fullScreenContent(item: $showTorrent, title: media.title) { item in
+                TorrentPlayerView(torrent: item.torrent, media: media)
+            }
         }
     }
 }
