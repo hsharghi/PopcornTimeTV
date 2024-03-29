@@ -51,7 +51,7 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
             VStack {
                 Text("Choose Quality")
                 chooseLinksButtons
-                    .controlSize(.large)
+                    .controlSize(.extraLarge)
             }
             .font(.system(size: 16))
             .padding(20)
@@ -61,7 +61,7 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
             switch alert.id {
             case .noLinksFound:
                 return Alert(title: Text("No links found"),
-                      message: Text("Direct stream link could not be found for the specified media."))
+                      message: Text("Direct stream link could not be found for the specified media. Switch to Torrent links in the Setting view."))
             case .streamOnCellular:
                 return Alert(title: Text("Cellular Data is turned off for streaming"),
                       message: nil,
@@ -100,7 +100,7 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
                 action(link)
             } label: {
                 #if os(iOS) || os(tvOS)
-                Text("\(link.title) | \(link.encoder) | \(link.size)")
+                Text("\(link.title) | \(link.size) | \(link.encoder)")
                 #elseif os(macOS)
                 Text(link.title)
                 Text(link.size)

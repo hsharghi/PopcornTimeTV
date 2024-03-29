@@ -18,7 +18,7 @@ open class AlmasApi {
     public func getMovieLinks(imdbUrl: URL) async throws -> [DownloadLink] {
         let imdbId = imdbUrl.lastPathComponent
         guard imdbId.hasPrefix("tt") else { return [] }
-        let data = try await client.request(.get, path: "/", parameters: ["showitem":"tt0068646"]).responseData()
+        let data = try await client.request(.get, path: "/", parameters: ["showitem":imdbId]).responseData()
         guard let html = String(data: data, encoding: .utf8) else { return [] }
 
         let links = try findLinks(from: html)
@@ -36,11 +36,16 @@ open class AlmasApi {
             let a = try p.select("a")
             let text = try a.text()
             let link = try a.attr("href")
+//            link = link.removingPercentEncoding ?? link
             let parts = text.components(separatedBy: "/")
-            guard parts.count == 3 else { continue }
-            let quality = parts[0].trimmingCharacters(in: .whitespaces)
-            let encoder = parts[1].trimmingCharacters(in: .whitespaces)
-            let size = parts[2].trimmingCharacters(in: .whitespaces)
+            guard parts.count >= 3 else { continue }
+            let quality = parts.first!.trimmingCharacters(in: .whitespaces)
+            let size = parts.last!.trimmingCharacters(in: .whitespaces)
+            let encoder = text
+                .replacingOccurrences(of: "/", with: "")
+                .replacingOccurrences(of: quality, with: "")
+                .replacingOccurrences(of: size, with: "")
+                .trimmingCharacters(in: .whitespaces)
             let format = link.components(separatedBy: ".").last?.uppercased() ?? ""
             let downloadLink = DownloadLink(title: quality, encoder: encoder, size: size, format: format, link: link)
             links.append(downloadLink)

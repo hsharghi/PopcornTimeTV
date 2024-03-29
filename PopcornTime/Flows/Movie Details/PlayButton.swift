@@ -25,14 +25,15 @@ struct PlayButton: View {
     
     var body: some View {
         
-        if Session.useDirectLinks {
-            let links = (media as? Movie)?.directDownloadLinks ?? []
+        let links = (media as? Movie)?.directDownloadLinks ?? []
+        if Session.useDirectLinks && links.count > 0 {
             SelectDirectLinkQualityButton(links: links, media: media) { downloadLink in
                 print(downloadLink.link)
-                if let encodedUrl = downloadLink.encodedUrl {
-                    let url = URL(string: "infuse://x-callback-url/play?url=\(encodedUrl)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+//                if let encodedUrl = downloadLink.encodedUrl {
+                    print(URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
+                    let url = URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
                     openURL(url)
-                }
+//                }
             } label: {
                 VStack {
                     VisualEffectBlur() {

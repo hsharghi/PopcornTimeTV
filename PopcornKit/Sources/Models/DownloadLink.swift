@@ -11,7 +11,7 @@ import Foundation
 public struct DownloadLink {
     public let title: String
     public let encoder: String
-    public let size: String
+    public  let size: String
     public let format: String
     public let season: Int?
     public let episode: Int?
@@ -40,10 +40,10 @@ extension DownloadLink: Equatable, Comparable, Identifiable {
     }
     
     var actualSize: Double {
-        let components = self.size.components(separatedBy: " ")
-        guard components.count == 2,
-        let bytes = Double(components[0]) else { return 0 }
-        let multiplier = switch components[1] {
+        let numeric = self.size.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789.").inverted)
+        guard let bytes = Double(numeric) else { return 0 }
+        let unit = self.size.replacingOccurrences(of: numeric, with: "").trimmingCharacters(in: .whitespaces)
+        let multiplier = switch unit.uppercased() {
         case "KB": 1024
         case "MB": 1024 * 1024
         case "GB": 1024 * 1024 * 1024
