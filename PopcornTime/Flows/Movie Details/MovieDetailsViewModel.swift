@@ -58,7 +58,7 @@ class MovieDetailsViewModel: ObservableObject, CharacterHeadshotLoader, MediaRat
                 movie.ratings = self.movie.ratings
                 movie.largeBackgroundImage = self.movie.largeBackgroundImage ?? movie.largeBackgroundImage //keep last background
                 if Session.useDirectLinks {
-                    movie.directDownloadLinks = try? await AlmasApi.shared.getMovieLinks(imdbUrl: movie.imdbUrl)
+                    movie.directDownloadLinks = try? await AlmasApi.shared.getMovieLinks(imdbId: movie.id)
                 }
                 self.movie = movie
                 self.downloadModel = DownloadButtonViewModel(media: movie)

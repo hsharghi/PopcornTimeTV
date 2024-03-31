@@ -82,7 +82,11 @@ class ShowDetailsViewModel: ObservableObject {
                     self.show.tmdbId = tmdbId
                 }
                 self.currentSeason = season
-                
+
+                if Session.useDirectLinks {
+                    await updateShowLinks()
+                }
+
                 self.related = (try? await related) ?? []
                 let persons = (try? await people) ?? (actors: [], crew: [])
                 self.persons = persons.actors + persons.crew
@@ -90,6 +94,18 @@ class ShowDetailsViewModel: ObservableObject {
                 self.error = error
             }
             self.isLoading = false
+        }
+    }
+    
+    func updateShowLinks() async {
+        self.show.directDownloadLinks = nil
+        let seasons = try? await AlmasApi.shared.getSeasons(imdbId: show.id) 
+        self.show.seasonLinks = seasons ?? .init()
+        let links = try? await AlmasApi.shared.getShowLink(imdbId: show.id)
+        if let links,
+           !links.isEmpty {
+            print("links downloaded: \(links.count)")
+            self.show.directDownloadLinks = links
         }
     }
     
@@ -104,7 +120,16 @@ class ShowDetailsViewModel: ObservableObject {
     }
     
     func seasonEpisodes() -> [Episode] {
-        return show.episodes.filter({$0.season == currentSeason}).sorted(by: {$0.episode < $1.episode})
+        let episodes = show.episodes.filter({$0.season == currentSeason}).sorted(by: {$0.episode < $1.episode})
+        let eps = episodes.map {
+            var episode = $0
+            episode.directDownloadLinks = show.directDownloadLinks?.filter {
+                $0.season == currentSeason &&
+                $0.episode == episode.episode
+            }
+            return episode
+        }
+        return eps
     }
     
     func nextEpisodeToWatch() -> Episode? {

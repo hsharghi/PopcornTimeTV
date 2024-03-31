@@ -25,7 +25,7 @@ struct PlayButton: View {
     
     var body: some View {
         
-        let links = (media as? Movie)?.directDownloadLinks ?? []
+        let links = (media as? Movie)?.directDownloadLinks ?? (media as? Episode)?.directDownloadLinks ?? []
         if Session.useDirectLinks && links.count > 0 {
             SelectDirectLinkQualityButton(links: links, media: media) { downloadLink in
                 print(downloadLink.link)

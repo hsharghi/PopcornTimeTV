@@ -11,6 +11,8 @@ import PopcornKit
 import Combine
 
 struct EpisodesView: View {
+    @Environment(\.openURL) private var openURL
+    
     let theme = Theme()
     
     var show: Show
@@ -28,9 +30,9 @@ struct EpisodesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            #if os(tvOS)
+#if os(tvOS)
             titleView
-            #endif
+#endif
             episodesCountView
             ScrollViewReader { scroll in
                 ScrollView(.horizontal) {
@@ -40,9 +42,9 @@ struct EpisodesView: View {
                         }
                     }
                     .padding([.top, .bottom], 20) // allow zooming to be visible
-                    #if os(tvOS)
+#if os(tvOS)
                     .padding(.bottom, 55) // allow card style - shadow to be visible
-                    #endif
+#endif
                     .padding([.leading, .trailing], theme.leading)
                 }
                 .onAppear {
@@ -53,10 +55,10 @@ struct EpisodesView: View {
                 }
             }
             currentEpisodeView
-            #if os(tvOS)
+#if os(tvOS)
                 .padding(.top, -55) // revert back on top, because of focused shadow
                 .focusSection()
-            #endif
+#endif
         }
         .fullScreenContent(item: $showTorrent, title: show.title, content: { item in
             TorrentPlayerView(torrent: item.torrent,
@@ -83,29 +85,59 @@ struct EpisodesView: View {
     @ViewBuilder
     func episodeView(episode: Episode, scroll: ScrollViewProxy) -> some View {
         let isSelected = episode.id == currentEpisode?.id && episode.episode == currentEpisode?.episode
-        SelectTorrentQualityButton(media: episode, action: { torrent in
-            self.currentEpisode = episode
-            showTorrent = PlayTorrentEpisode(torrent: torrent, episode: episode)
-        }, label: {
-            EpisodeView(episode: episode, onFocus: {
-                #if os(tvOS)
-                onFocus()
+        if Session.useDirectLinks && episode.directDownloadLinks?.count ?? 0 > 0 {
+            SelectDirectLinkQualityButton(links: episode.directDownloadLinks!, media: episode) { downloadLink in
+                print(downloadLink.link)
+                //                if let encodedUrl = downloadLink.encodedUrl {
+                print(URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
+                let url = URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+                openURL(url)
+                //                }
+            } label: {
+                EpisodeView(episode: episode, onFocus: {
+                    #if os(tvOS)
+                    onFocus()
+                    currentEpisode = episode
+                    //                scroll.scrollTo(episode.episode, anchor: .leading)
+                    #endif
+                })
+                #if os(iOS) || os(macOS)
+                .environment(\.isFocused, isSelected)
+                #endif
+            }
+            .frame(width: theme.episodeWidth, height: theme.episodeHeight)
+            #if os(tvOS)
+            .buttonStyle(.card)
+            #else
+            .buttonStyle(TVButtonStyle(onFocus: {}, onPressed:{
                 currentEpisode = episode
-//                scroll.scrollTo(episode.episode, anchor: .leading)
+            }, isSelected: isSelected))
+            #endif
+        } else {
+            SelectTorrentQualityButton(media: episode, action: { torrent in
+                self.currentEpisode = episode
+                showTorrent = PlayTorrentEpisode(torrent: torrent, episode: episode)
+            }, label: {
+                EpisodeView(episode: episode, onFocus: {
+                    #if os(tvOS)
+                    onFocus()
+                    currentEpisode = episode
+                    //                scroll.scrollTo(episode.episode, anchor: .leading)
+                    #endif
+                })
+                #if os(iOS) || os(macOS)
+                .environment(\.isFocused, isSelected)
                 #endif
             })
-            #if os(iOS) || os(macOS)
-                .environment(\.isFocused, isSelected)
+            .frame(width: theme.episodeWidth, height: theme.episodeHeight)
+            #if os(tvOS)
+            .buttonStyle(.card)
+            #else
+            .buttonStyle(TVButtonStyle(onFocus: {}, onPressed:{
+                currentEpisode = episode
+            }, isSelected: isSelected))
             #endif
-        })
-        .frame(width: theme.episodeWidth, height: theme.episodeHeight)
-        #if os(tvOS)
-        .buttonStyle(.card)
-        #else
-        .buttonStyle(TVButtonStyle(onFocus: {}, onPressed:{
-            currentEpisode = episode
-        }, isSelected: isSelected))
-        #endif
+        }
     }
     
     var episodesCountView: some View {
@@ -121,10 +153,10 @@ struct EpisodesView: View {
         }
         
         return Text("\(seasonString) (\(numberOfEpisodes.lowercased())) - \(year)")
-                .font(.callout)
-                .foregroundColor(.appSecondary)
-                .padding(.leading, theme.leading)
-                .padding(.top, 14)
+            .font(.callout)
+            .foregroundColor(.appSecondary)
+            .padding(.leading, theme.leading)
+            .padding(.top, 14)
     }
     
     @ViewBuilder
@@ -159,9 +191,9 @@ extension EpisodesView {
         let episodeHeight: CGFloat = value(tvOS: 200, macOS: 141)
         let episodeSpacing: CGFloat = value(tvOS: 40, macOS: 24)
         var currentEpisode: (leading: CGFloat, height: CGFloat, trailing: CGFloat)
-            { (leading: value(tvOS: 90, macOS: 50, compactSize: 20),
-               height: value(tvOS: 350, macOS: 250),
-               trailing: value(tvOS: 500, macOS: 200)) }
+        { (leading: value(tvOS: 90, macOS: 50, compactSize: 20),
+           height: value(tvOS: 350, macOS: 250),
+           trailing: value(tvOS: 500, macOS: 200)) }
         var leading: CGFloat { value(tvOS: 90, macOS: 50, compactSize: 20) }
         
         let scrollPosition: UnitPoint? = value(tvOS: nil, macOS: nil)
@@ -186,7 +218,7 @@ struct EpisodesView_Previews: PreviewProvider {
                     .environmentObject(showDetails)
             }
         }
-            .preferredColorScheme(.dark)
-            .background(.gray)
+        .preferredColorScheme(.dark)
+        .background(.gray)
     }
 }

@@ -12,14 +12,16 @@ public struct DownloadLink {
     public let title: String
     public let encoder: String
     public  let size: String
+    public  let quality: String
     public let format: String
     public let season: Int?
     public let episode: Int?
     public let link: String
     
-    public init(title: String, encoder: String, size: String, format: String, season: Int? = nil, episode: Int? = nil, link: String) {
+    public init(title: String, encoder: String, quality: String, size: String, format: String, season: Int? = nil, episode: Int? = nil, link: String) {
         self.title = title
         self.encoder = encoder
+        self.quality = quality
         self.size = size
         self.format = format
         self.season = season
@@ -67,9 +69,9 @@ extension DownloadLink: Equatable, Comparable, Identifiable {
 public extension DownloadLink {
     
     static let movieLinks: [DownloadLink] = [
-        .init(title: "1080p 10bit WEB-DL x265 SoftSub", encoder: "YTS", size: "2.65 GB", format: "MKV", link: ""),
-        .init(title: "720p WEB-DL SoftSub", encoder: "YTS", size: "1.15 MB", format: "MKV", link: ""),
-        .init(title: "720p 10bit WEB-DL x265 SoftSub", encoder: "PSA", size: "968 MB", format: "MKV", link: ""),
-        .init(title: "480p HardSub", encoder: "Ganool", size: "720 MB", format: "MKV", link: ""),
+        .init(title: "10bit WEB-DL x265 SoftSub", encoder: "YTS", quality: "1080p", size: "2.65 GB", format: "MKV", link: ""),
+        .init(title: "720p WEB-DL SoftSub", encoder: "YTS",  quality: "720p", size: "1.15 MB", format: "MKV", link: ""),
+        .init(title: "720p 10bit WEB-DL x265 SoftSub", encoder: "PSA",  quality: "720p", size: "968 MB", format: "MKV", link: ""),
+        .init(title: "480p HardSub", encoder: "Ganool",  quality: "480p", size: "720 MB", format: "MKV", link: ""),
     ]
 }

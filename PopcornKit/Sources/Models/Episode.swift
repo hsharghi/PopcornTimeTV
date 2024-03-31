@@ -41,6 +41,8 @@ public struct Episode: Media, Equatable {
     /// The corresponding show object.
     public var show: Show?
     
+    public var directDownloadLinks: [DownloadLink]?
+    
     /// Convenience variable. Boolean value indicating the watched status of the episode.
     public var isWatched: Bool {
         get {

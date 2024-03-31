@@ -16,6 +16,9 @@ public struct Show: Media, Equatable, Identifiable {
     /// Imdb id of show.
     public var id: String
 
+    /// Direct download links for the show
+    public var directDownloadLinks: [DownloadLink]?
+
     /// TMDB id of the show. This will be `nil` unless explicitly set by calling `getTMDBId:forImdbId:completion:` on `TraktManager` or the show was loaded from Trakt.
     public var tmdbId: Int?
     
@@ -51,6 +54,8 @@ public struct Show: Media, Equatable, Identifiable {
     
     /// Status of the show. ie. Returning series, Ended etc. Will be `nil` until `getInfo:imdbId:completion` is called on `ShowManager` and shows are updated.
     public var status: String?
+    
+    public var seasonLinks: [Int: [String]] = .init()
     
     /// The season numbers of the available seasons. The popcorn-api may only retrieve some seasons in arbitrary order. This variable contains the sorted season numbers. For example, popcorn-api only fetches series 21-28 of The Simpsons. This array will contain the numbers 21, 22, 23 ... 28 sorted by lowest first.
     public var seasonNumbers: [Int] {
