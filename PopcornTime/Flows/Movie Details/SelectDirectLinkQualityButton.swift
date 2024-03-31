@@ -100,7 +100,7 @@ struct SelectDirectLinkQualityButton<Label>: View where Label : View {
                 action(link)
             } label: {
                 #if os(iOS) || os(tvOS)
-                Text("\(link.title) | \(link.size) | \(link.encoder)")
+                Text("\(link.quality) | \(link.size) |  \(link.title) | \(link.encoder)")
                 #elseif os(macOS)
                 Text(link.title)
                 Text(link.size)
