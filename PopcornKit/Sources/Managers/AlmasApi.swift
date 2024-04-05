@@ -72,6 +72,7 @@ open class AlmasApi: NSObject {
             guard let html = String(data: data, encoding: .utf8) else { return [] }
             let doc = try SwiftSoup.parse(html)
             var rows = try doc.select("tr").array()
+            guard rows.count >= 2 else { return [] }
             rows.removeFirst()
             rows.removeFirst()
             for row in rows {
