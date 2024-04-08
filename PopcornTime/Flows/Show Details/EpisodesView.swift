@@ -87,11 +87,12 @@ struct EpisodesView: View {
         let isSelected = episode.id == currentEpisode?.id && episode.episode == currentEpisode?.episode
         if Session.useDirectLinks && episode.directDownloadLinks?.count ?? 0 > 0 {
             SelectDirectLinkQualityButton(links: episode.directDownloadLinks!, media: episode) { downloadLink in
-                print(downloadLink.link)
-                //                if let encodedUrl = downloadLink.encodedUrl {
-                print(URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
-                let url = URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
-                openURL(url)
+                if let link = downloadLink.encodedUrl {
+                    print(link)
+                    print(URL(string: "infuse://x-callback-url/play?url=\(link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
+                    let url = URL(string: "infuse://x-callback-url/play?url=\(link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+                    openURL(url)
+                }
                 //                }
             } label: {
                 EpisodeView(episode: episode, onFocus: {

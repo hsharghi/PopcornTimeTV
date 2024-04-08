@@ -30,8 +30,11 @@ public struct DownloadLink {
     }
     
     public var encodedUrl: String? {
-        let allowedCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "~-_."))
-        return self.link.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)
+        if let decoded = self.link.removingPercentEncoding {
+            let allowedCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "~-_."))
+            return decoded.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)
+        }
+        return self.link
     }
 }
 
