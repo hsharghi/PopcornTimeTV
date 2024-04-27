@@ -31,7 +31,8 @@ struct PlayButton: View {
                 print(downloadLink.link)
 //                if let encodedUrl = downloadLink.encodedUrl {
                     print(URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
-                    let url = URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+                let callbackParams = "res=success&duration=\((media as? Movie)?.runtime ?? 0)&startTime=\(Date().timeIntervalSince1970)".toBase64()
+                let url = URL(string: "infuse://x-callback-url/play?url=\(downloadLink.link)&x-success=PopcornTime://\(callbackParams)&x-errro=PopcornTime://\(callbackParams)")!
                     openURL(url)
 //                }
             } label: {

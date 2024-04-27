@@ -105,7 +105,46 @@ struct MovieDetailsView: View, MediaPosterLoader {
             }.onDisappear {
 //                viewModel.stopTheme()
             }
+            .onOpenURL { incommingUrl in
+                handleIncommingUrl(incommingUrl)
+            }
         .ignoresSafeArea()
+    }
+    
+    func handleIncommingUrl(_ url: URL) {
+        guard url.scheme == "PopcornTime" else {
+            return
+        }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params = components.host?.fromBase64()?
+            .components(separatedBy: "&")
+            .reduce(into: [String: String]()) { result, param in
+                let pair = param.components(separatedBy: "=")
+                if let key = pair.first, let value = pair.last {
+                    result[key] = value
+                }
+            }
+        
+        guard let params, !params.isEmpty else {
+            print("No parameters found in callback url!")
+            return
+        }
+        
+        guard let res = params["res"], res == "success",
+        let durationString = params["duration"], let duration = Double(durationString),
+            let startTimeString = params["startTime"], let startTime = Double(startTimeString) else {
+                print("Can't extract parameters from callback url!")
+                return
+            }
+        
+        let playingTime = Date().timeIntervalSince1970 - TimeInterval(startTime)
+        if playingTime > 0.7 * duration * 60 {
+            viewModel.movie.isWatched = true
+        }
     }
     
     func backgroundImage() -> some View {
