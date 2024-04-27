@@ -137,10 +137,62 @@ struct ShowDetailsView: View, MediaPosterLoader {
         }.onAppear {
             viewModel.load()
         }
+        .onOpenURL { incommingUrl in
+            Task {
+                await handleIncommingUrl(incommingUrl)
+            }
+        }
         .environmentObject(viewModel)
         .ignoresSafeArea()
     }
     
+    func handleIncommingUrl(_ url: URL) async {
+        guard url.scheme == "PopcornTime" else {
+            return
+        }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let params = components.host?.fromBase64()?
+            .components(separatedBy: "&")
+            .reduce(into: [String: String]()) { result, param in
+                let pair = param.components(separatedBy: "=")
+                if let key = pair.first, let value = pair.last {
+                    result[key] = value
+                }
+            }
+        
+        guard let params, !params.isEmpty else {
+            print("No parameters found in callback url!")
+            return
+        }
+        
+        guard let res = params["res"], res == "success",
+              let idString = params["id"], let id = Int(idString), id != 0,
+              let seasonString = params["season"], let season = Int(seasonString),
+              let episodeString = params["episode"], let episode = Int(episodeString),
+            let startTimeString = params["startTime"], let startTime = Double(startTimeString) else {
+                print("Can't extract parameters from callback url!")
+                return
+            }
+        
+        let runtime = try? await TMDBApi.shared.getEpisodeRuntime(tmdbId: id, season: season, episode: episode)
+        guard let runtime else {
+            print("Unknown episode runtime!")
+            return
+        }
+        let playingTime = Date().timeIntervalSince1970 - TimeInterval(startTime)
+        if playingTime > 0 { // 0.7 * Double(runtime) * 60 {
+            let manager = WatchedlistManager<Episode>.episode
+            guard let currentEpisode = show.episodes.filter({ $0.season == season && $0.episode == episode}).first else {
+                return
+            }
+            manager.add(currentEpisode.id)
+        }
+    }
+
     func backgroundImage() -> some View {
         Color.clear
             .background(

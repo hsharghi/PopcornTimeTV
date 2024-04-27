@@ -89,8 +89,9 @@ struct EpisodesView: View {
             SelectDirectLinkQualityButton(links: episode.directDownloadLinks!, media: episode) { downloadLink in
                 if let link = downloadLink.encodedUrl {
                     print(link)
+                    let callbackParams = "res=success&id=\(episode.tmdbId ?? 0)&season=\(episode.season)&episode=\(episode.episode)&startTime=\(Date().timeIntervalSince1970)".toBase64()
                     print(URL(string: "infuse://x-callback-url/play?url=\(link)&x-success=PopcornTime://&x-errro=PopcornTime://")!)
-                    let url = URL(string: "infuse://x-callback-url/play?url=\(link)&x-success=PopcornTime://&x-errro=PopcornTime://")!
+                    let url = URL(string: "infuse://x-callback-url/play?url=\(link)&x-success=PopcornTime://\(callbackParams)&x-errro=PopcornTime://\(callbackParams)")!
                     openURL(url)
                 }
                 //                }
