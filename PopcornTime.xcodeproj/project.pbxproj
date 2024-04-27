@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F2172922BDD967400A1EBF2 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2172912BDD967400A1EBF2 /* String+Base64.swift */; };
+		0F2172932BDD967400A1EBF2 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2172912BDD967400A1EBF2 /* String+Base64.swift */; };
+		0F2172942BDD967400A1EBF2 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2172912BDD967400A1EBF2 /* String+Base64.swift */; };
 		0F738B202BB2E93D0080F230 /* SelectDirectLinkQualityButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0589292BB223F90044CB57 /* SelectDirectLinkQualityButton.swift */; };
 		0FC4A34B2B7CE69700DE4D76 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0FC4A34C2B7CE69C00DE4D76 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */; };
@@ -424,6 +427,7 @@
 /* Begin PBXFileReference section */
 		002682111CD0B76200F51D31 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = System/Library/Frameworks/TVServices.framework; sourceTree = SDKROOT; };
 		0F0589292BB223F90044CB57 /* SelectDirectLinkQualityButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDirectLinkQualityButton.swift; sourceTree = "<group>"; };
+		0F2172912BDD967400A1EBF2 /* String+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
 		0FC4A3492B7CE69000DE4D76 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = "VLCKit/VLCKit - binary package/VLCKit.xcframework"; sourceTree = "<group>"; };
 		0FC4A34D2B7CF07100DE4D76 /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = "VLCKit/TVVLCKit-binary/TVVLCKit.xcframework"; sourceTree = "<group>"; };
 		0FC4A34F2B7CF07C00DE4D76 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = "VLCKit/MobileVLCKit-binary/MobileVLCKit.xcframework"; sourceTree = "<group>"; };
@@ -937,6 +941,7 @@
 			isa = PBXGroup;
 			children = (
 				4DCB39301E843C0200388374 /* VLCMediaPlayer+VLCFontAppearance.swift */,
+				0F2172912BDD967400A1EBF2 /* String+Base64.swift */,
 				4D99956D1E5CE227005C432A /* Font+Style.swift */,
 				4DDBD9081E0EDA2E00CEA1B1 /* Array+Extension.swift */,
 				4D0183A81DC3ACB400AB75B3 /* Locale+Langs.swift */,
@@ -1257,6 +1262,7 @@
 				23B24D7E26CA963E00B8CD84 /* FullScreenContent.swift in Sources */,
 				23446AD4268071A40049CC72 /* SubtitleSettings.swift in Sources */,
 				2388FD5F2691C50600B51201 /* PersonDetailsViewModel.swift in Sources */,
+				0F2172922BDD967400A1EBF2 /* String+Base64.swift in Sources */,
 				23446AD72680BBE80049CC72 /* VLCPlayerView.swift in Sources */,
 				237EC9F526B842F300EE8B46 /* MPMediaType.swift in Sources */,
 				23313B49267E3DF600774A85 /* CodableCaching.swift in Sources */,
@@ -1299,6 +1305,7 @@
 				23A2BDD626BEDC50004B864E /* CodableCaching.swift in Sources */,
 				236A11B426C6772E00AFF1FD /* PreloadTorrentViewModel.swift in Sources */,
 				23B24D7F26CA963E00B8CD84 /* FullScreenContent.swift in Sources */,
+				0F2172932BDD967400A1EBF2 /* String+Base64.swift in Sources */,
 				23A2BD8D26BED9FA004B864E /* ShowsView.swift in Sources */,
 				23A2BDC226BEDBC2004B864E /* RotateAnimation.swift in Sources */,
 				23A2BDD426BEDC3E004B864E /* Media + Download.swift in Sources */,
@@ -1479,6 +1486,7 @@
 				23A10F3E26C699D00062D9CE /* DownloadsViewModel.swift in Sources */,
 				23C4AD2E26FF4EEE007B8E09 /* RatingsOverlayView.swift in Sources */,
 				23B24D7A26CA78B600B8CD84 /* ExtendedSubtitlesView.swift in Sources */,
+				0F2172942BDD967400A1EBF2 /* String+Base64.swift in Sources */,
 				23A10F3D26C699CD0062D9CE /* DownloadsView.swift in Sources */,
 				234180A126C29F7D00C32083 /* WatchlistView.swift in Sources */,
 				2304531F26BAFAEA0050BCB8 /* StarRatingView.swift in Sources */,
