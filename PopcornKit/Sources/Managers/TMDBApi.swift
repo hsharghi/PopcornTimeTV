@@ -127,4 +127,25 @@ open class TMDBApi {
         
         return trailerId
     }
+    
+    
+    /**
+     Get episode runtime from TMDB api.
+     
+     - Parameter tmdbId:            The tmdb id of the show.
+     - Parameter season:            The season number of the episode.
+     - Parameter episode:           The episode number.
+     */
+    open func getEpisodeRuntime(tmdbId: Int, season: Int, episode: Int) async throws -> Int? {
+        let path = TMDB.tv + "/\(tmdbId)" + TMDB.season + "/\(season)" + TMDB.episode + "/\(episode)"
+        let data = try await client.request(.get, path: path, parameters: TMDB.defaultHeaders).responseData()
+        let responseDict = JSON(data)
+        print(responseDict.rawValue)
+        
+        if let item = responseDict["results"].array?.first {
+            let runtime = item["runtime"]
+            return runtime.int
+        }
+        return nil
+    }
 } 
