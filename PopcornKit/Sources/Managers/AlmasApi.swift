@@ -18,12 +18,17 @@ open class AlmasApi: NSObject {
     
     public func getMovieLinks(imdbId: String) async throws -> [DownloadLink] {
         guard imdbId.hasPrefix("tt") else { return [] }
-        let data = try await client.request(.get, path: "/", parameters: ["showitem":imdbId]).responseData()
-        guard let html = String(data: data, encoding: .utf8) else { return [] }
-        
-        let links = try findLinks(from: html)
-        
-        return links
+        do {
+            let data = try await client.request(.get, path: "/", parameters: ["showitem":imdbId]).responseData()
+            guard let html = String(data: data, encoding: .utf8) else { return [] }
+            
+            let links = try findLinks(from: html)
+            
+            return links
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
         
     }
     
