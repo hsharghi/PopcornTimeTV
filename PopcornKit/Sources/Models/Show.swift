@@ -140,8 +140,16 @@ public struct Show: Media, Equatable, Identifiable {
             self.tvdbId = try map.value("tvdb_id")
             self.year = try map.value("year")
             self.rating = try map.value("rating.percentage")
-            self.largeCoverImage = try? map.value("images.poster"); largeCoverImage = largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000").replacingOccurrences(of: "http://", with: "https://").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
-            self.largeBackgroundImage = try? map.value("images.fanart"); largeBackgroundImage = largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920").replacingOccurrences(of: "http://", with: "https://").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+            self.largeCoverImage = try? map.value("images.poster"); largeCoverImage = largeCoverImage?
+                .replacingOccurrences(of: "w500", with: "w780")
+                .replacingOccurrences(of: "SX300", with: "SX1000")
+                .replacingOccurrences(of: "http://", with: "https://")
+//                .replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+            self.largeBackgroundImage = try? map.value("images.fanart"); largeBackgroundImage = largeBackgroundImage?
+                .replacingOccurrences(of: "w500", with: "original")
+                .replacingOccurrences(of: "SX300", with: "SX1920")
+                .replacingOccurrences(of: "http://", with: "https://")
+//                .replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
             self.slug = try map.value("slug")
             self.airDay = try? map.value("air_day")
             self.airTime = try? map.value("air_time")

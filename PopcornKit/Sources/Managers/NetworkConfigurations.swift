@@ -3,7 +3,7 @@ import Foundation
 public struct Trakt {
     static let apiKey = "d3b0811a35719a67187cba2476335b2144d31e5840d02f687fbf84e7eaadc811"
     static let apiSecret = "f047aa37b81c87a990e210559a797fd4af3b94c16fb6d22b62aa501ca48ea0a4"
-    static let base = "https://trakt.pashmakmovie.xyz"
+    static let base = "https://api.trakt.tv"
     static let shows = "/shows"
     static let movies = "/movies"
     static let people = "/people"

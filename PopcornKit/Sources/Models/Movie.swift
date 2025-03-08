@@ -139,8 +139,10 @@ public struct Movie: Media, Equatable, Identifiable {
             self.year = try map.value("year")
             self.rating = try map.value("rating.percentage")
             self.summary = ((try? map.value("synopsis")) ?? "No summary available.".localized).removingHtmlEncoding
-            self.largeCoverImage = try? map.value("images.poster"); self.largeCoverImage = self.largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
-            self.largeBackgroundImage = try? map.value("images.fanart"); self.largeBackgroundImage = self.largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920").replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+            self.largeCoverImage = try? map.value("images.poster"); self.largeCoverImage = self.largeCoverImage?.replacingOccurrences(of: "w500", with: "w780").replacingOccurrences(of: "SX300", with: "SX1000")
+//                .replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
+            self.largeBackgroundImage = try? map.value("images.fanart"); self.largeBackgroundImage = self.largeBackgroundImage?.replacingOccurrences(of: "w500", with: "original").replacingOccurrences(of: "SX300", with: "SX1920")
+//                .replacingOccurrences(of: "image.tmdb.org", with: "tmdb.pashmakmovie.xyz")
             self.runtime = try map.value("runtime", using: IntTransform())
 
         }
