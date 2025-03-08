@@ -89,4 +89,61 @@ public func downloadSubtitleFile(_ url: String,
         return destinationUrl
 }
 
+public func serverURL() -> String {
+    return Session.popcornBaseUrls ?? ""
+}
 
+public func setUserCustomUrls(newUrl: String?) async -> String {
+    Session.popcornBaseUrls = newUrl
+    if let userUrls = newUrl, !userUrls.isEmpty {
+        if let url = await PopcornKit.getFirstLivePopcornURL(fromUrls: userUrls) {
+            PopcornApi.changeBaseUrl(newUrl: url)
+        }
+        return userUrls
+    } else {
+        _ = await handleServerWasMoved()
+        return Session.popcornBaseUrls ?? ""
+    }
+}
+
+/// return if a live server is found
+public func handleServerWasMoved() async -> Bool {
+    // check if any server is up, from previus saved list
+    if let appUrls = Session.popcornBaseUrls,
+       let url = await PopcornKit.getFirstLivePopcornURL(fromUrls: appUrls) {
+        PopcornApi.changeBaseUrl(newUrl: url)
+        return true
+    }
+    
+    if let endpoints = try? await DHTApi().loadEndpoints() {
+        let urls = endpoints.server
+        if urls == Session.popcornBaseUrls {
+            return false // nothing to do, same urls as those found in DHT
+        }
+        
+        Session.popcornBaseUrls = urls
+        if let url = await PopcornKit.getFirstLivePopcornURL(fromUrls: urls) {
+            PopcornApi.changeBaseUrl(newUrl: url)
+            return true
+        }
+    }
+    
+    return false
+}
+
+/// get first url that is live from a list of separated by comma, by getting status
+private func getFirstLivePopcornURL(fromUrls from: String) async -> String? {
+    let urls = from.split(separator: ",").compactMap { URL(string: String($0)) }
+    for url in urls {
+        let statusURL = url.appendingPathComponent("status")
+        if let _ = try? await URLSession.shared.data(from: statusURL) {
+            var serverUrl = url.absoluteString
+            if serverUrl.hasSuffix("/") {
+                serverUrl = String(serverUrl.dropLast())
+            }
+            return serverUrl
+        }
+    }
+    
+    return nil
+}

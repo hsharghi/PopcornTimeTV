@@ -16,6 +16,11 @@ enum Session {
     @UserDefault(key: "skipReleaseVersion", defaultValue: nil)
     static var skipReleaseVersion: Data?
     
+    // last valid url
     @UserDefault(key: "popcornUrl", defaultValue: nil)
-    static var popcornBaseUrl: String?
+    static var lastPopcornBaseUrl: String?
+    
+    // urls separated by comma
+    @UserDefault(key: "popcornUrls", defaultValue: nil)
+    static var popcornBaseUrls: String?
 }

@@ -52,12 +52,14 @@ struct TrailerButton: View {
             .onDisappear {
                 onPlayerClose()
             }
+            #if os(iOS)
             .overlay(alignment: .topLeading, content: {
-                if #available(iOS 16, macOS 9999, tvOS 9999, *) {
+                if #available(iOS 16, *) {
                     closeButton
                         .position(x:20, y:35)
                 }
             })
+            #endif
             .ignoresSafeArea()
     }
     

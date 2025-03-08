@@ -10,18 +10,14 @@ open class PopcornApi {
     let client: HttpClient
     
     public init() {
-        let url = Session.popcornBaseUrl ?? Popcorn.base
+        let url = Session.lastPopcornBaseUrl ?? Popcorn.base
         client = HttpClient(config: .init(serverURL: url, apiErrorDecoder: { data in
             return try? JSONDecoder().decode(Popcorn.APIError.self, from: data)
         }))
     }
     
-    public var customBaseURL: String { // empty if default
-        return client.config.serverURL != Popcorn.base ? client.config.serverURL : ""
-    }
-    
-    public static func changeBaseUrl(newUrl: String?) {
-        Session.popcornBaseUrl = newUrl
+    public static func changeBaseUrl(newUrl: String) {
+        Session.lastPopcornBaseUrl = newUrl
         shared = PopcornApi()
     }
     
@@ -82,5 +78,9 @@ open class PopcornApi {
      */
     open func getInfo(_ imdbId: String) async throws -> Show {
         return try await client.request(.get, path: Popcorn.show + "/\(imdbId)").responseMapable()
+    }
+    
+    open func getStatus() async throws -> Data {
+        return try await client.request(.get, path: Popcorn.status).responseData()
     }
 }

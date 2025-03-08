@@ -50,11 +50,15 @@ class SettingsViewModel: ObservableObject {
         TraktApi.shared.syncUserData()
     }
     
-    @Published var serverUrl: String = PopcornApi.shared.customBaseURL
+    @Published var serverUrl: String = PopcornKit.serverURL()
+    var chekServerIsUpTask: Task<(), Never>?
     
     func changeUrl(_ url: String) {
-        PopcornApi.changeBaseUrl(newUrl: url.isEmpty ? nil : url)
-        serverUrl = PopcornApi.shared.customBaseURL
+        self.chekServerIsUpTask?.cancel()
+        self.chekServerIsUpTask = Task { @MainActor [weak self] in
+            self?.serverUrl = await PopcornKit.setUserCustomUrls(newUrl: url)
+            self?.chekServerIsUpTask = nil
+        }
     }
     
     var networkMonitor: NWPathMonitor = {

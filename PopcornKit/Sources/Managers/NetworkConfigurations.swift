@@ -116,6 +116,13 @@ public struct OMDb {
     static let defaultParameters: [String: String] = [:]
 }
 
+// cloudflare cached version of above
+public struct DHT {
+    static let base = "https://dht.randomrush.site"
+    
+    static let defaultParameters: [String: String] = [:]
+}
+
 
 public struct Popcorn {
     static let base = "https://uxert.link"
@@ -123,6 +130,7 @@ public struct Popcorn {
     static let movie = "/movie"
     static let shows = "/shows"
     static let show = "/show"
+    static let status = "/status"
     
     /// Possible orders used in API call.
     public enum Orders: Int {
